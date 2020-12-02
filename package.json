@@ -1,0 +1,52 @@
+{
+  "name": "murmurations-profile-generator",
+  "version": "1.0.0",
+  "description": "Enable users to create and manage profiles for posting on Murmurations.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint --fix .",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MurmurationsNetwork/MurmurationsProfileGenerator.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MurmurationsNetwork/MurmurationsProfileGenerator/issues"
+  },
+  "homepage": "https://github.com/MurmurationsNetwork/MurmurationsProfileGenerator#readme",
+  "dependencies": {
+    "@chakra-ui/react": "^1.0.1",
+    "@emotion/react": "^11.1.1",
+    "@emotion/styled": "^11.0.0",
+    "framer-motion": "^2.9.5",
+    "next": "^9.5.5",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-simple-import-sort": "^6.0.1",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
+    "prettier": "^2.2.1"
+  }
+}
