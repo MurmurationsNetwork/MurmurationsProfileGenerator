@@ -1,8 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { css, Global } from '@emotion/react'
 
-import { AuthProvider } from '../lib/auth'
-import customTheme from '../styles/theme'
+import { AuthProvider } from '@/lib/auth'
+import customTheme from '@/styles/theme'
 
 const GlobalStyle = ({ children }) => {
   return (
