@@ -1,7 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { css, Global } from '@emotion/react'
 
-import customTheme from '../styles/theme'
+import { AuthProvider } from '@/lib/auth'
+import customTheme from '@/styles/theme'
 
 const GlobalStyle = ({ children }) => {
   return (
@@ -27,9 +28,11 @@ const GlobalStyle = ({ children }) => {
 function MpgApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={customTheme}>
-      <GlobalStyle>
-        <Component {...pageProps} />
-      </GlobalStyle>
+      <AuthProvider>
+        <GlobalStyle>
+          <Component {...pageProps} />
+        </GlobalStyle>
+      </AuthProvider>
     </ChakraProvider>
   )
 }
