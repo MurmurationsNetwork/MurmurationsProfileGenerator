@@ -2,6 +2,7 @@ import { Button, Heading, Text } from '@chakra-ui/react'
 
 import { useAuth } from '@/lib/auth'
 import { getSchemas } from '@/lib/library'
+import { useProfile } from '@/lib/profile'
 
 export async function getStaticProps() {
   const schemas = await getSchemas()
@@ -13,6 +14,7 @@ export async function getStaticProps() {
 
 export default function Dashboard({ schemas }) {
   const auth = useAuth()
+  const { profile } = useProfile()
 
   return (
     <div>
@@ -20,6 +22,7 @@ export default function Dashboard({ schemas }) {
       {auth.user ? (
         <>
           <Button onClick={() => auth.signout()}>Sign Out</Button>
+          <Text as="pre">{JSON.stringify(profile, null, 2)}</Text>
           <Text as="pre">{JSON.stringify(schemas, null, 2)}</Text>
         </>
       ) : (
