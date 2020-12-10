@@ -13,7 +13,9 @@ export default function Index() {
         Router.push('/dashboard') && <Text>Redirecting...</Text>
       ) : (
         <>
-          <Button onClick={() => auth.signinWithGithub('/dashboard')}>Sign In</Button>
+          <Button m={1} onClick={() => auth.signinWithGithub('/dashboard')}>
+            Sign In
+          </Button>
         </>
       )}
     </div>
