@@ -5,32 +5,34 @@ import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Dashboard() {
-  const auth = useAuth()
-  const { profile, resetProfile } = useProfile()
+  const { signinWithGithub, signout, user } = useAuth()
+  const { profile, resetProfile, setProfile } = useProfile()
 
-  const clearProfile = () => {
-    resetProfile()
-    console.log('profile reset')
+  function modifyProfile() {
+    setProfile({ ...profile, schemas: ['demo-v2', 'murmurations_users-v1'] })
   }
-
-  console.log('Dashboard/profile', profile)
 
   return (
     <div>
       <Heading>Dashboard</Heading>
-      {auth.user ? (
+      {user ? (
         <>
           <NextLink href="/profile">
-            <Button m={1} onClick={clearProfile}>
+            <Button m={1} onClick={resetProfile}>
               Create Profile
             </Button>
           </NextLink>
-          <Button m={1} onClick={() => auth.signout()}>
+          <NextLink href="/profile">
+            <Button m={1} onClick={modifyProfile}>
+              Modify Profile
+            </Button>
+          </NextLink>
+          <Button m={1} onClick={() => signout()}>
             Sign Out
           </Button>
         </>
       ) : (
-        <Button m={1} onClick={() => auth.signinWithGithub()}>
+        <Button m={1} onClick={() => signinWithGithub()}>
           Sign In
         </Button>
       )}
