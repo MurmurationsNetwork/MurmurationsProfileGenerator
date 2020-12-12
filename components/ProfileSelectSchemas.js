@@ -6,24 +6,31 @@ import useSWR from 'swr'
 import fetcher from '@/utils/fetcher'
 
 function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
-  return schemaList.data.map((schema) => {
-    return (
-      <Text key={schema.name}>
-        <input
-          type="checkbox"
-          defaultChecked={selectedSchemas[schema.name]}
-          onClick={() => dispatch({ type: 'toggle', name: schema.name })}
-        />
-        <a href={schema.url} rel="noreferrer" target="_blank">
-          <strong>{schema.title}</strong>
-        </a>{' '}
-        (version {schema.version}) -- {schema.description}
-      </Text>
-    )
-  })
+  return (
+    schemaList.data
+      // Remove the default schema which is only used by the index
+      // for initial validation
+      .filter((schema) => schema.name !== 'default-v1')
+      .map((schema) => {
+        return (
+          <Text key={schema.name}>
+            <input
+              type="checkbox"
+              defaultChecked={selectedSchemas[schema.name]}
+              onClick={() => dispatch({ type: 'toggle', name: schema.name })}
+            />
+            <a href={schema.url} rel="noreferrer" target="_blank">
+              <strong>{schema.title}</strong>
+            </a>{' '}
+            (version {schema.version}) -- {schema.description}
+          </Text>
+        )
+      })
+  )
 }
 
 export default function ProfileSelectSchemas({ profile, setProfile }) {
+  console.log('ProfileSelectSchema/profile', profile)
   let selectedSchemas = {}
   let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)

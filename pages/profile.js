@@ -24,11 +24,11 @@ export default function Profile() {
             Sign Out
           </Button>
           {profile.step === 1 ? (
-            <ProfileSelectSchemas profile={profile} setProfile={setProfile} setStep={setStep} />
+            <ProfileSelectSchemas profile={profile} setProfile={setProfile} />
           ) : profile.step === 2 ? (
-            <ProfileCreateSchema profile={profile} setStep={setStep} />
+            <ProfileCreateSchema profile={profile} setProfile={setProfile} />
           ) : profile.step === 3 ? (
-            <ProfilePostSchema profile={profile} setStep={setStep} />
+            <ProfilePostSchema profile={profile} setProfile={setProfile} />
           ) : (
             Router.push('/dashboard') && <Text>Redirecting...</Text>
           )}
