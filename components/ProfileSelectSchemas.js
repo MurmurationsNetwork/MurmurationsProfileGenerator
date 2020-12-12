@@ -1,6 +1,9 @@
 import { Button, Text } from '@chakra-ui/react'
 import { pickBy } from 'lodash'
 import { useReducer, useState } from 'react'
+import useSWR from 'swr'
+
+import fetcher from '@/utils/fetcher'
 
 function SchemasList({ dispatch, schemaList, selectedSchemas }) {
   return schemaList.data.map((schema) => {
@@ -20,19 +23,29 @@ function SchemasList({ dispatch, schemaList, selectedSchemas }) {
   })
 }
 
-export default function ProfileSelectSchemas({ profile, setProfile, schemaList }) {
+export default function ProfileSelectSchemas({ profile, setProfile }) {
   let selectedSchemas = {}
+  let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)
-  const [error, setError] = useState(false)
+  const [selectError, setSelectError] = useState(false)
   const { schemas } = profile
+  const { data, error } = useSWR(
+    process.env.NEXT_PUBLIC_MURMURATIONS_LIBRARY_API_URL + '/schemas',
+    fetcher
+  )
 
-  schemaList.data.map((schema) => {
-    if (schemas.find((s) => s === schema.name)) {
-      selectedSchemas[schema.name] = true
-    } else {
-      selectedSchemas[schema.name] = false
-    }
-  })
+  if (error) console.error('fetch schemaList', error)
+
+  if (data) {
+    schemaList = data
+    schemaList.data.map((schema) => {
+      if (schemas.find((s) => s === schema.name)) {
+        selectedSchemas[schema.name] = true
+      } else {
+        selectedSchemas[schema.name] = false
+      }
+    })
+  }
 
   function reducer(state, action) {
     switch (action.type) {
@@ -46,7 +59,7 @@ export default function ProfileSelectSchemas({ profile, setProfile, schemaList }
   function handleClick() {
     let pickedSchemas = Object.keys(pickBy(state))
     if (pickedSchemas.length === 0) {
-      setError(true)
+      setSelectError(true)
     } else {
       setProfile({ ...profile, step: 2, schemas: pickedSchemas })
     }
@@ -58,8 +71,18 @@ export default function ProfileSelectSchemas({ profile, setProfile, schemaList }
       <Button m={1} onClick={handleClick}>
         Next
       </Button>
-      {error === true ? <Text>You need to select at least one network!</Text> : null}
-      <SchemasList dispatch={dispatch} schemaList={schemaList} selectedSchemas={selectedSchemas} />
+      {selectError === true ? <Text>You need to select at least one network!</Text> : null}
+      {data ? (
+        <SchemasList
+          dispatch={dispatch}
+          schemaList={schemaList}
+          selectedSchemas={selectedSchemas}
+        />
+      ) : error ? (
+        <Text>There was an error loading the schema list.</Text>
+      ) : (
+        <Text>Loading...</Text>
+      )}
     </div>
   )
 }

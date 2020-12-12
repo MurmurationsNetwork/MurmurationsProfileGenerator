@@ -6,19 +6,9 @@ import ProfileCreateSchema from '@/components/ProfileCreateSchema'
 import ProfilePostSchema from '@/components/ProfilePostSchema'
 import ProfileSelectSchemas from '@/components/ProfileSelectSchemas'
 import { useAuth } from '@/lib/auth'
-import { getSchemas } from '@/lib/library'
 import { useProfile } from '@/lib/profile'
 
-export async function getStaticProps() {
-  const schemaList = await getSchemas()
-
-  return {
-    props: { schemaList },
-    revalidate: 1
-  }
-}
-
-export default function Profile({ schemaList }) {
+export default function Profile() {
   const { signinWithGithub, signout, user } = useAuth()
   const { profile, setProfile, setStep } = useProfile()
 
@@ -34,12 +24,7 @@ export default function Profile({ schemaList }) {
             Sign Out
           </Button>
           {profile.step === 1 ? (
-            <ProfileSelectSchemas
-              profile={profile}
-              setProfile={setProfile}
-              setStep={setStep}
-              schemaList={schemaList}
-            />
+            <ProfileSelectSchemas profile={profile} setProfile={setProfile} setStep={setStep} />
           ) : profile.step === 2 ? (
             <ProfileCreateSchema profile={profile} setStep={setStep} />
           ) : profile.step === 3 ? (
