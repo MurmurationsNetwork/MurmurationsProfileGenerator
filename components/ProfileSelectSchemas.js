@@ -5,7 +5,7 @@ import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
 
-function SchemasList({ dispatch, schemaList, selectedSchemas }) {
+function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
   return schemaList.data.map((schema) => {
     return (
       <Text key={schema.name}>
@@ -73,7 +73,7 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
       </Button>
       {selectError === true ? <Text>You need to select at least one network!</Text> : null}
       {data ? (
-        <SchemasList
+        <ListSchemas
           dispatch={dispatch}
           schemaList={schemaList}
           selectedSchemas={selectedSchemas}
