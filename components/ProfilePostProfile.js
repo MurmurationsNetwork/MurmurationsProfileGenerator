@@ -1,13 +1,14 @@
 import { Button, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 
-export default function ProfilePostSchema({ profile, setProfile }) {
+export default function ProfilePostProfile({ profile, setProfile }) {
   console.log('ProfilePostSchema/profile', profile)
   const [submitted, setSubmitted] = useState(false)
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
   let profileJson = profile.json
 
+  // Add `linked_schemas` into profile before posting to index
   profileJson.linked_schemas = profile.schemas
 
   function handleInput(e) {

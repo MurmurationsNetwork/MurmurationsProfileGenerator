@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
 import { Button, Text } from '@chakra-ui/react'
-import useSWR from 'swr'
-import { merge, isEqual } from 'lodash'
+import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { JsonForms } from '@jsonforms/react'
-import { materialRenderers, materialCells } from '@jsonforms/material-renderers'
+import { isEqual, merge } from 'lodash'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
+
 import parser from '@/utils/parser'
 
-export default function ProfileCreateSchema({ profile, setProfile }) {
+export default function ProfileCreateProfile({ profile, setProfile }) {
   console.log('ProfileCreateSchema/profile', profile)
   const [validationErrors, setValidationErrors] = useState([])
   const [valid, setValid] = useState(true)
