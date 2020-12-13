@@ -2,7 +2,6 @@ import { Button, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 
 export default function ProfilePostProfile({ profile, setProfile }) {
-  console.log('ProfilePostSchema/profile', profile)
   const [submitted, setSubmitted] = useState(false)
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')

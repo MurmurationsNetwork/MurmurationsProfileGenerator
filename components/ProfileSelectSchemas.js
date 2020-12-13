@@ -30,7 +30,6 @@ function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
 }
 
 export default function ProfileSelectSchemas({ profile, setProfile }) {
-  console.log('ProfileSelectSchema/profile', profile)
   let selectedSchemas = {}
   let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)

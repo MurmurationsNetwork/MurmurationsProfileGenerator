@@ -8,7 +8,6 @@ import useSWR from 'swr'
 import parser from '@/utils/parser'
 
 export default function ProfileCreateProfile({ profile, setProfile }) {
-  console.log('ProfileCreateSchema/profile', profile)
   const [validationErrors, setValidationErrors] = useState([])
   const [valid, setValid] = useState(true)
   const [profileSubmitted, setProfileSubmitted] = useState(false)
@@ -23,7 +22,9 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
     let schemaUrl = `${process.env.NEXT_PUBLIC_MURMURATIONS_CDN_URL}/schemas/${schema}.json`
     const { data, error } = useSWR(schemaUrl, parser)
     if (error) console.error('fetch schemas', error)
+
     mergedSchemas = merge({}, mergedSchemas, data)
+
     if (data) {
       schemaList.push(data.title)
       // Remove `$schema` property so JSON Forms doesn't freak out
