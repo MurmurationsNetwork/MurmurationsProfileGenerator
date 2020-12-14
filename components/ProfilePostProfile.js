@@ -1,14 +1,35 @@
 import { Button, Input, Text } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function ProfilePostProfile({ profile, setProfile }) {
+import { postProfileUrl } from '@/lib/api'
+import { createProfile } from '@/lib/db'
+
+export default function ProfilePostProfile({ profile, setProfile, user }) {
   const [submitted, setSubmitted] = useState(false)
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
   let profileJson = profile.json
 
-  // Add `linked_schemas` into profile before posting to index
   profileJson.linked_schemas = profile.schemas
+
+  useEffect(() => {
+    async function postNode() {
+      if (posted) {
+        const result = await postProfileUrl(profile.url)
+        postProfile(result.data.node_id)
+      }
+    }
+
+    postNode()
+  }, [posted])
+
+  async function postProfile(node_id) {
+    // Remove superfluous step parameter from being posted to DB
+    // eslint-disable-next-line
+    const { step, ...postingProfile } = profile
+    postingProfile.node_id = node_id
+    createProfile(node_id, postingProfile)
+  }
 
   function handleInput(e) {
     setSubmitted(false)
@@ -18,7 +39,16 @@ export default function ProfilePostProfile({ profile, setProfile }) {
   function handleSubmit(e) {
     e.preventDefault()
     setSubmitted(true)
-    if (profileUrl.length > 1) setPosted(true)
+    if (profileUrl.length < 1) {
+      return
+    }
+    setProfile({
+      ...profile,
+      json: profileJson,
+      url: profileUrl,
+      user: user.uid
+    })
+    setPosted(true)
   }
 
   return (

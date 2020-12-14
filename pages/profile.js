@@ -28,7 +28,7 @@ export default function Profile() {
           ) : profile.step === 2 ? (
             <ProfileCreateProfile profile={profile} setProfile={setProfile} />
           ) : profile.step === 3 ? (
-            <ProfilePostProfile profile={profile} setProfile={setProfile} />
+            <ProfilePostProfile profile={profile} setProfile={setProfile} user={user} />
           ) : (
             Router.push('/dashboard') && <Text>Redirecting...</Text>
           )}
