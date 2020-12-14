@@ -1,4 +1,4 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Button, HStack, Text } from '@chakra-ui/react'
 import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
@@ -25,13 +25,13 @@ export default function DashboardProfiles({ profiles, setProfiles }) {
   return (
     <div>
       {profiles.map((profile) => (
-        <div key={profile.node_id}>
-          <Button mr={1}>Update</Button>
+        <HStack key={profile.node_id}>
+          <Button>Update</Button>
           <Button>Delete</Button>
           <Text>
             <strong>{profile.status}</strong> -- {profile.url} - {profile.schemas}
           </Text>
-        </div>
+        </HStack>
       ))}
     </div>
   )
