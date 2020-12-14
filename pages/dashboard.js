@@ -1,11 +1,11 @@
 import { Button, Heading } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
 import NextLink from 'next/link'
+import { useEffect, useState } from 'react'
 
-import { useAuth } from '@/lib/auth'
-import { useProfile } from '@/lib/profile'
-import { getProfiles } from '@/lib/db'
 import DashboardProfiles from '@/components/DashboardProfiles'
+import { useAuth } from '@/lib/auth'
+import { getProfiles } from '@/lib/db'
+import { useProfile } from '@/lib/profile'
 
 const sample = {
   name: 'IC3 Dev',

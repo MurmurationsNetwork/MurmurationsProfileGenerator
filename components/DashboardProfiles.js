@@ -1,6 +1,7 @@
-import fetcher from '@/utils/fetcher'
 import { Button, Text } from '@chakra-ui/react'
 import useSWR from 'swr'
+
+import fetcher from '@/utils/fetcher'
 
 export default function DashboardProfiles({ profiles, setProfiles }) {
   profiles.forEach((profile) => {
