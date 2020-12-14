@@ -1,8 +1,11 @@
 import { Button, Heading } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import NextLink from 'next/link'
 
 import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
+import { getProfiles } from '@/lib/db'
+import DashboardProfiles from '@/components/DashboardProfiles'
 
 const sample = {
   name: 'IC3 Dev',
@@ -33,6 +36,11 @@ const sample = {
 export default function Dashboard() {
   const { signinWithGithub, signout, user } = useAuth()
   const { profile, resetProfile, setProfile } = useProfile()
+  const [profiles, setProfiles] = useState([])
+
+  useEffect(() => {
+    if (user) getProfiles(user.uid).then((data) => setProfiles(data))
+  }, [user])
 
   function modifyProfile() {
     setProfile({ ...profile, step: 1, schemas: ['demo-v2'], json: sample })
@@ -56,6 +64,7 @@ export default function Dashboard() {
           <Button m={1} onClick={() => signout()}>
             Sign Out
           </Button>
+          {profiles ? <DashboardProfiles profiles={profiles} setProfiles={setProfiles} /> : null}
         </>
       ) : (
         <Button m={1} onClick={() => signinWithGithub()}>
