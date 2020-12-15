@@ -3,18 +3,34 @@ import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 
 import DashboardProfiles from '@/components/DashboardProfiles'
+import { getProfileStatus } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
-import { getProfiles } from '@/lib/db'
+import { deleteProfile, getProfiles } from '@/lib/db'
 import { useProfile } from '@/lib/profile'
 
 export default function Dashboard() {
   const { signinWithGithub, signout, user } = useAuth()
-  const { profile, resetProfile, setProfile } = useProfile()
+  const { resetProfile } = useProfile()
   const [profiles, setProfiles] = useState([])
 
   useEffect(() => {
-    if (user) getProfiles(user.uid).then((data) => setProfiles(data))
-  })
+    if (user) {
+      let profileList = []
+      getProfiles(user.uid).then((nodeProfiles) => {
+        nodeProfiles.forEach((nodeProfile) => {
+          getProfileStatus(nodeProfile.node_id).then(({ data }) => {
+            if (data === undefined) {
+              deleteProfile(nodeProfile.node_id)
+            } else {
+              const { status } = data
+              profileList.push({ ...nodeProfile, status })
+              setProfiles([...profileList])
+            }
+          })
+        })
+      })
+    }
+  }, [user])
 
   return (
     <div>
@@ -29,7 +45,7 @@ export default function Dashboard() {
           <Button m={1} onClick={() => signout()}>
             Sign Out
           </Button>
-          {profiles ? <DashboardProfiles profiles={profiles} setProfiles={setProfiles} /> : null}
+          {profiles ? <DashboardProfiles profiles={profiles} /> : null}
         </>
       ) : (
         <Button m={1} onClick={() => signinWithGithub()}>
