@@ -1,37 +1,19 @@
-import { Button, Heading } from '@chakra-ui/react'
+import { Button, Heading, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 
 import AppShell from '@/components/AppShell'
 import DashboardProfiles from '@/components/DashboardProfiles'
-import { getProfileStatus } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
-import { deleteProfile, getProfiles } from '@/lib/db'
 import { useProfile } from '@/lib/profile'
+import fetcher from '@/utils/fetcher'
 
 export default function Dashboard() {
   const { signinWithGithub, signout, user } = useAuth()
   const { resetProfile } = useProfile()
-  const [profiles, setProfiles] = useState([])
+  const { data, error } = useSWR(user ? '/api/profiles' : null, fetcher)
 
-  useEffect(() => {
-    if (user) {
-      let profileList = []
-      getProfiles(user.uid).then((nodeProfiles) => {
-        nodeProfiles.forEach((nodeProfile) => {
-          getProfileStatus(nodeProfile.node_id).then(({ data }) => {
-            if (data === undefined) {
-              deleteProfile(nodeProfile.node_id)
-            } else {
-              const { status } = data
-              profileList.push({ ...nodeProfile, status })
-              setProfiles([...profileList])
-            }
-          })
-        })
-      })
-    }
-  }, [user])
+  if (error) console.error('useSWR /api/profiles', error)
 
   return (
     <AppShell>
@@ -47,7 +29,7 @@ export default function Dashboard() {
             <Button m={1} onClick={() => signout()}>
               Sign Out
             </Button>
-            {profiles ? <DashboardProfiles profiles={profiles} /> : null}
+            {data ? <DashboardProfiles profiles={data} /> : <Text>Loading...</Text>}
           </>
         ) : (
           <Button m={1} onClick={() => signinWithGithub()}>
