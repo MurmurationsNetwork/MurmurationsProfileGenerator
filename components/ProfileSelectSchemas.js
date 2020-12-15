@@ -10,8 +10,8 @@ function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
     schemaList.data
       // Remove the default schema which is only used by the index
       // for initial validation
-      .filter((schema) => schema.name !== 'default-v1')
-      .map((schema) => {
+      .filter(schema => schema.name !== 'default-v1')
+      .map(schema => {
         return (
           <Text key={schema.name}>
             <input
@@ -44,8 +44,8 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
 
   if (data) {
     schemaList = data
-    schemaList.data.map((schema) => {
-      if (schemas.find((s) => s === schema.name)) {
+    schemaList.data.map(schema => {
+      if (schemas.find(s => s === schema.name)) {
         selectedSchemas[schema.name] = true
       } else {
         selectedSchemas[schema.name] = false

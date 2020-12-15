@@ -7,12 +7,12 @@ export default async (_, res) => {
   const allProfiles = []
   const activeProfiles = []
 
-  snapshot.forEach((doc) => {
+  snapshot.forEach(doc => {
     allProfiles.push(doc.data())
   })
 
   await Promise.all(
-    allProfiles.map(async (profile) => {
+    allProfiles.map(async profile => {
       const profileStatus = await getProfileStatus(profile.node_id)
       if (profileStatus.data) {
         profile.status = profileStatus.data.status

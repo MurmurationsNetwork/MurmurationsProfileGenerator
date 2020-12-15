@@ -18,7 +18,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
 
   useEffect(() => (validationErrors.length !== 0 ? setValid(false) : setValid(true)))
 
-  selectedSchemas.forEach((schema) => {
+  selectedSchemas.forEach(schema => {
     let schemaUrl = `${process.env.NEXT_PUBLIC_MURMURATIONS_CDN_URL}/schemas/${schema}.json`
     const { data, error } = useSWR(schemaUrl, parser)
     if (error) console.error('fetch schemas', error)
@@ -31,7 +31,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
       delete mergedSchemas['$schema']
       // Remove the required property `linked_schemas` from form so it will validate
       let filteredRequirements = mergedSchemas.required
-      mergedSchemas.required = filteredRequirements.filter((req) => req !== 'linked_schemas')
+      mergedSchemas.required = filteredRequirements.filter(req => req !== 'linked_schemas')
       // Remove `linked_schemas` so user does not have to type them in
       delete mergedSchemas.properties.linked_schemas
     }
@@ -61,7 +61,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
       </Button>
       <Text>
         Using the following schema{schemaList.length > 1 ? <span>s</span> : null}:{' '}
-        {schemaList.map((schema) => (
+        {schemaList.map(schema => (
           <strong key={schema}> &nbsp;&nbsp;&nbsp; {schema}</strong>
         ))}
       </Text>
