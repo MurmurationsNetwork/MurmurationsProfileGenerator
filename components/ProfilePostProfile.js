@@ -1,4 +1,6 @@
-import { Button, Input, Text } from '@chakra-ui/react'
+import { Button, Input, Switch, Text } from '@chakra-ui/react'
+import cuid from 'cuid'
+import { sha256 } from 'js-sha256'
 import { useEffect, useState } from 'react'
 
 import { postProfileUrl } from '@/lib/api'
@@ -8,6 +10,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   const [submitted, setSubmitted] = useState(false)
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
+  const [hosted, setHosted] = useState(false)
   let profileJson = profile.json
 
   profileJson.linked_schemas = profile.schemas
@@ -15,20 +18,29 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   useEffect(() => {
     async function postNode() {
       if (posted) {
-        const result = await postProfileUrl(profile.url)
-        postProfile(result.data.node_id)
+        // Remove superfluous step parameter from being posted to DB
+        // eslint-disable-next-line
+        const { step, ...postingProfile } = profile
+
+        if (hosted) {
+          const hostId = cuid()
+          const url = `${process.env.NEXT_PUBLIC_MURMURATIONS_MPG_URL}/api/p/${hostId}`
+          postingProfile.url = url
+          postingProfile.hostId = hostId
+        }
+
+        postingProfile.node_id = sha256(postingProfile.url)
+
+        await createProfile(postingProfile.node_id, postingProfile)
+        await postProfileUrl(postingProfile.url)
       }
     }
 
     postNode()
   }, [posted])
 
-  async function postProfile(node_id) {
-    // Remove superfluous step parameter from being posted to DB
-    // eslint-disable-next-line
-    const { step, ...postingProfile } = profile
-    postingProfile.node_id = node_id
-    createProfile(node_id, postingProfile)
+  function handleToggle() {
+    setHosted(!hosted)
   }
 
   function handleInput(e) {
@@ -39,7 +51,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   function handleSubmit(e) {
     e.preventDefault()
     setSubmitted(true)
-    if (profileUrl.length < 1) {
+    if (!hosted && profileUrl.length < 1) {
       return
     }
     setProfile({
@@ -66,14 +78,21 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
           <Button m={1} onClick={handleSubmit}>
             Next
           </Button>
-          <Input
-            name="profileUrl"
-            type="text"
-            placeholder="example: https://your.site/subdirectory/profile.json"
-            value={profileUrl}
-            onChange={handleInput}
-          />
-          {submitted === true && profileUrl.length < 1 ? (
+          <Switch onChange={handleToggle} />
+          <Text as="span">Host profile for me</Text>
+          {!hosted && (
+            <>
+              <Text>Enter the URL where your profile will be hosted:</Text>
+              <Input
+                name="profileUrl"
+                type="text"
+                placeholder="example: https://your.site/subdirectory/profile.json"
+                value={profileUrl}
+                onChange={handleInput}
+              />
+            </>
+          )}
+          {submitted === true && hosted === false && profileUrl.length < 1 ? (
             <Text>You need to enter a profile URL!</Text>
           ) : null}
           <Text as="pre">{JSON.stringify(profileJson, null, 2)}</Text>
