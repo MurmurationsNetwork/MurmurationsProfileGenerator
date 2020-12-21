@@ -72,12 +72,8 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         </Text>
       ) : (
         <div>
-          <Button m={1} onClick={() => setProfile({ ...profile, step: 2 })}>
-            Back
-          </Button>
-          <Button m={1} onClick={handleSubmit}>
-            Next
-          </Button>
+          <Button onClick={() => setProfile({ ...profile, step: 2 })}>Back</Button>
+          <Button onClick={handleSubmit}>Next</Button>
           <Switch onChange={handleToggle} />
           <Text as="span">Host profile for me</Text>
           {!hosted && (

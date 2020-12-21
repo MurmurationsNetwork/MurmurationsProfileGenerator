@@ -1,11 +1,14 @@
 import { Button, Heading, Text } from '@chakra-ui/react'
 import Router from 'next/router'
+import NextLink from 'next/link'
 
 import AppShell from '@/components/AppShell'
 import { useAuth } from '@/lib/auth'
+import { useProfile } from '@/lib/profile'
 
 export default function Index() {
   const { signinWithGithub, user } = useAuth()
+  const { resetProfile } = useProfile()
 
   return (
     <AppShell>
@@ -15,9 +18,13 @@ export default function Index() {
           Router.push('/dashboard') && <Text>Redirecting...</Text>
         ) : (
           <>
-            <Button m={1} onClick={() => signinWithGithub('/dashboard')}>
-              Sign In
-            </Button>
+            <NextLink href="/dashboard">
+              <Button>Dashboard</Button>
+            </NextLink>
+            <NextLink href="/profile">
+              <Button onClick={resetProfile}>Create Profile</Button>
+            </NextLink>
+            <Button onClick={() => signinWithGithub('/dashboard')}>Sign In</Button>
           </>
         )}
       </div>
