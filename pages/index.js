@@ -1,6 +1,6 @@
 import { Button, Heading, Text } from '@chakra-ui/react'
-import Router from 'next/router'
 import NextLink from 'next/link'
+import Router from 'next/router'
 
 import AppShell from '@/components/AppShell'
 import { useAuth } from '@/lib/auth'

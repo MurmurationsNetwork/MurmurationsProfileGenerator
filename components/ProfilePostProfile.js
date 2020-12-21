@@ -13,7 +13,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   const [hosted, setHosted] = useState(false)
   let profileJson = profile.json
 
-  profileJson.linked_schemas = profile.schemas
+  hosted ? (profileJson.linked_schemas = profile.schemas) : null
 
   useEffect(() => {
     async function postNode() {
@@ -54,12 +54,23 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
     if (!hosted && profileUrl.length < 1) {
       return
     }
-    setProfile({
-      ...profile,
-      json: profileJson,
-      url: profileUrl,
-      user: user.uid
-    })
+    if (hosted) {
+      setProfile({
+        ...profile,
+        json: profileJson,
+        url: profileUrl,
+        user: user.uid
+      })
+    } else {
+      // Don't store JSON for unhosted profiles
+      // eslint-disable-next-line
+      const { json, ...postingProfile } = profile
+      setProfile({
+        ...postingProfile,
+        url: profileUrl,
+        user: user?.uid || 'anonymous'
+      })
+    }
     setPosted(true)
   }
 
