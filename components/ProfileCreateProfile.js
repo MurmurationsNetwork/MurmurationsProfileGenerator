@@ -3,7 +3,6 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { JsonForms } from '@jsonforms/react'
 import { isEqual, merge, union } from 'lodash'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
 
 import parser from '@/utils/parser'
 
@@ -12,33 +11,36 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   const [valid, setValid] = useState(true)
   const [profileSubmitted, setProfileSubmitted] = useState(false)
   const [formData, setFormData] = useState(profile.json)
+  const [allSchemas, setAllSchemas] = useState(mergedSchemas)
+  const [schemaList, setSchemaList] = useState([])
   const selectedSchemas = profile.schemas
-  let schemaList = []
   let mergedSchemas = { type: 'object', properties: {} }
   let requiredProperties = []
 
   useEffect(() => (validationErrors.length !== 0 ? setValid(false) : setValid(true)))
-
-  selectedSchemas.forEach(schema => {
-    let schemaUrl = `${process.env.NEXT_PUBLIC_MURMURATIONS_CDN_URL}/schemas/${schema}.json`
-    const { data, error } = useSWR(schemaUrl, parser)
-    if (error) console.error('fetch schemas', error)
-
-    mergedSchemas = merge({}, mergedSchemas, data)
-
-    if (data) {
-      schemaList.push(data.title)
-      // Remove `$schema` property so JSON Forms doesn't freak out
-      delete mergedSchemas['$schema']
-      // Remove the required property `linked_schemas` from form so it will validate
-      let schemaRequiredProperties = mergedSchemas.required.filter(req => req !== 'linked_schemas')
-      // Then merge together all other required properties from the selected schemas
-      requiredProperties = union(requiredProperties, schemaRequiredProperties)
-      mergedSchemas.required = requiredProperties
-      // Remove `linked_schemas` so user does not have to type them in
-      delete mergedSchemas.properties.linked_schemas
-    }
-  })
+  useEffect(() => {
+    selectedSchemas.forEach(schema => {
+      let schemaUrl = `${process.env.NEXT_PUBLIC_MURMURATIONS_CDN_URL}/schemas/${schema}.json`
+      parser(schemaUrl)
+        .then(data => {
+          mergedSchemas = merge({}, mergedSchemas, data)
+          setSchemaList(oldList => [...oldList, data.title])
+          // Remove `$schema` property so JSON Forms doesn't freak out
+          delete mergedSchemas['$schema']
+          // Remove the required property `linked_schemas` from form so it will validate
+          let schemaRequiredProperties = mergedSchemas.required.filter(
+            req => req !== 'linked_schemas'
+          )
+          // Then merge together all other required properties from the selected schemas
+          requiredProperties = union(requiredProperties, schemaRequiredProperties)
+          mergedSchemas.required = requiredProperties
+          // Remove `linked_schemas` so user does not have to type them in
+          delete mergedSchemas.properties.linked_schemas
+          setAllSchemas(mergedSchemas)
+        })
+        .catch(error => console.error('parse schema', error))
+    })
+  }, [])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -69,7 +71,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
         <Text>You have not filled in all of the required fields.</Text>
       ) : null}
       <JsonForms
-        schema={mergedSchemas}
+        schema={allSchemas}
         renderers={materialRenderers}
         cells={materialCells}
         data={formData}
