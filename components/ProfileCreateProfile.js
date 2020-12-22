@@ -41,6 +41,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
     e.preventDefault()
     setProfileSubmitted(true)
     if (valid) {
+      formData.linked_schemas = profile.schemas
       setProfile({ ...profile, step: 3, json: formData })
     } else {
       return

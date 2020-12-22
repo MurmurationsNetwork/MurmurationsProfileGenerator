@@ -1,12 +1,14 @@
 import { Button, HStack, Text } from '@chakra-ui/react'
+import Router from 'next/router'
 
-export default function DashboardProfiles({ profiles }) {
+export default function DashboardProfiles({ profiles, setProfile }) {
   function handleUpdate(node_id) {
     fetch(`/api/${node_id}`)
       .then(response => response.json())
-      .then(r => console.log(r))
-    // write profile data to profile state
-    // redirect to step 1 of profile flow
+      .then(data => {
+        setProfile({ step: 1, ...data })
+        Router.push('/profile')
+      })
   }
 
   return (

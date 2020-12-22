@@ -13,8 +13,10 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   const [hosted, setHosted] = useState(false)
   let profileJson = profile.json
 
-  hosted ? (profileJson.linked_schemas = profile.schemas) : null
-
+  useEffect(() => {
+    profile.hostId ? setHosted(true) : undefined
+    profile.url ? setProfileUrl(profile.url) : undefined
+  }, [])
   useEffect(() => {
     async function postNode() {
       if (posted) {
@@ -22,14 +24,16 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         // eslint-disable-next-line
         const { step, ...postingProfile } = profile
 
-        if (hosted) {
+        if (hosted && !postingProfile.hostId) {
           const hostId = cuid()
           const url = `${process.env.NEXT_PUBLIC_MURMURATIONS_MPG_URL}/api/p/${hostId}`
           postingProfile.url = url
           postingProfile.hostId = hostId
         }
 
-        postingProfile.node_id = sha256(postingProfile.url)
+        if (!postingProfile.node_id) {
+          postingProfile.node_id = sha256(postingProfile.url)
+        }
 
         await createProfile(postingProfile.node_id, postingProfile)
         await postProfileUrl(postingProfile.url)
@@ -58,7 +62,6 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
       setProfile({
         ...profile,
         json: profileJson,
-        url: profileUrl,
         user: user.uid
       })
     } else {
@@ -79,14 +82,19 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
       <Text>Post Schema</Text>
       {posted === true ? (
         <Text>
-          The profile at {`<${profileUrl}>`} has been sent to the index for validation and posting.
+          The profile {!hosted ? `at <${profileUrl}>` : null} has been sent to the index for
+          validation and posting.
         </Text>
       ) : (
         <div>
           <Button onClick={() => setProfile({ ...profile, step: 2 })}>Back</Button>
           <Button onClick={handleSubmit}>Next</Button>
-          <Switch onChange={handleToggle} />
-          <Text as="span">Host profile for me</Text>
+          {!profile.hostId && (
+            <>
+              <Switch onChange={handleToggle} />
+              <Text as="span">Host profile for me</Text>
+            </>
+          )}
           {!hosted && (
             <>
               <Text>Enter the URL where your profile will be hosted:</Text>
@@ -102,7 +110,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
           {submitted === true && hosted === false && profileUrl.length < 1 ? (
             <Text>You need to enter a profile URL!</Text>
           ) : null}
-          <Text as="pre">{JSON.stringify(profileJson, null, 2)}</Text>
+          <Text as="pre">{JSON.stringify(profile.json, null, 2)}</Text>
         </div>
       )}
     </div>
