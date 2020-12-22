@@ -41,6 +41,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
     e.preventDefault()
     setProfileSubmitted(true)
     if (valid) {
+      formData.linked_schemas = profile.schemas
       setProfile({ ...profile, step: 3, json: formData })
     } else {
       return
@@ -50,13 +51,9 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   return (
     <div>
       <Text>Create Schema</Text>
-      <Button m={1} onClick={() => setProfile({ ...profile, step: 1, json: formData })}>
-        Back
-      </Button>
-      <Button m={1} onClick={handleSubmit}>
-        Next
-      </Button>
-      <Button m={1} onClick={() => setFormData({ ...formData, geolocation: { lat: 12, lon: 13 } })}>
+      <Button onClick={() => setProfile({ ...profile, step: 1, json: formData })}>Back</Button>
+      <Button onClick={handleSubmit}>Next</Button>
+      <Button onClick={() => setFormData({ ...formData, geolocation: { lat: 12, lon: 13 } })}>
         Geolocation
       </Button>
       <Text>

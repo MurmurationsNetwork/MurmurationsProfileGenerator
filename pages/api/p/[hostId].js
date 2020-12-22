@@ -5,8 +5,9 @@ export default async (req, res) => {
   const { payload, error } = await getHosted(hostId)
 
   if (error) {
-    res.status(500).json(error)
+    console.error('fetch hosted JSON', error)
+    return res.status(404).json(error)
   }
 
-  res.status(200).json(payload)
+  return res.status(200).json(payload)
 }

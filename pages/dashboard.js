@@ -10,7 +10,7 @@ import fetcher from '@/utils/fetcher'
 
 export default function Dashboard() {
   const { signinWithGithub, signout, user } = useAuth()
-  const { resetProfile } = useProfile()
+  const { resetProfile, setProfile } = useProfile()
   const { data, error } = useSWR(user ? '/api/profiles' : null, fetcher)
 
   if (error) console.error('useSWR /api/profiles', error)
@@ -18,23 +18,23 @@ export default function Dashboard() {
   return (
     <AppShell>
       <div>
-        <Heading>Dashboard</Heading>
+        <NextLink href="/">
+          <Heading>Dashboard</Heading>
+        </NextLink>
+        <NextLink href="/profile">
+          <Button onClick={resetProfile}>Create Profile</Button>
+        </NextLink>
         {user ? (
           <>
-            <NextLink href="/profile">
-              <Button m={1} onClick={resetProfile}>
-                Create Profile
-              </Button>
-            </NextLink>
-            <Button m={1} onClick={() => signout()}>
-              Sign Out
-            </Button>
-            {data ? <DashboardProfiles profiles={data} /> : <Text>Loading...</Text>}
+            <Button onClick={() => signout()}>Sign Out</Button>
+            {data ? (
+              <DashboardProfiles profiles={data} setProfile={setProfile} />
+            ) : (
+              <Text>Loading...</Text>
+            )}
           </>
         ) : (
-          <Button m={1} onClick={() => signinWithGithub()}>
-            Sign In
-          </Button>
+          <Button onClick={() => signinWithGithub()}>Sign In</Button>
         )}
       </div>
     </AppShell>

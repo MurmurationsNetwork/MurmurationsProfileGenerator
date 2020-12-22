@@ -16,28 +16,28 @@ export default function Profile() {
   return (
     <AppShell>
       <div>
-        <Heading>Profile</Heading>
+        <NextLink href="/">
+          <Heading>Profile</Heading>
+        </NextLink>
+        <NextLink href="/dashboard">
+          <Button>Dashboard</Button>
+        </NextLink>
         {user ? (
-          <>
-            <NextLink href="/dashboard">
-              <Button m={1}>Dashboard</Button>
-            </NextLink>
-            <Button m={1} onClick={() => signout()}>
-              Sign Out
-            </Button>
-            {profile.step === 1 ? (
-              <ProfileSelectSchemas profile={profile} setProfile={setProfile} />
-            ) : profile.step === 2 ? (
-              <ProfileCreateProfile profile={profile} setProfile={setProfile} />
-            ) : profile.step === 3 ? (
-              <ProfilePostProfile profile={profile} setProfile={setProfile} user={user} />
-            ) : (
-              Router.push('/dashboard') && <Text>Redirecting...</Text>
-            )}
-          </>
+          <Button onClick={() => signout()}>Sign Out</Button>
         ) : (
           <Button onClick={() => signinWithGithub()}>Sign In</Button>
         )}
+        <>
+          {profile.step === 1 ? (
+            <ProfileSelectSchemas profile={profile} setProfile={setProfile} />
+          ) : profile.step === 2 ? (
+            <ProfileCreateProfile profile={profile} setProfile={setProfile} />
+          ) : profile.step === 3 ? (
+            <ProfilePostProfile profile={profile} setProfile={setProfile} user={user} />
+          ) : (
+            Router.push('/dashboard') && <Text>Redirecting...</Text>
+          )}
+        </>
       </div>
     </AppShell>
   )
