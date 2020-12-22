@@ -35,7 +35,6 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
       // Then merge together all other required properties from the selected schemas
       requiredProperties = union(requiredProperties, schemaRequiredProperties)
       mergedSchemas.required = requiredProperties
-      console.log(mergedSchemas.required)
       // Remove `linked_schemas` so user does not have to type them in
       delete mergedSchemas.properties.linked_schemas
     }
