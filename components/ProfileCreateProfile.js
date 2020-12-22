@@ -1,7 +1,7 @@
 import { Button, Text } from '@chakra-ui/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { JsonForms } from '@jsonforms/react'
-import { isEqual, merge } from 'lodash'
+import { isEqual, merge, union } from 'lodash'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
@@ -15,6 +15,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   const selectedSchemas = profile.schemas
   let schemaList = []
   let mergedSchemas = { type: 'object', properties: {} }
+  let requiredProperties = []
 
   useEffect(() => (validationErrors.length !== 0 ? setValid(false) : setValid(true)))
 
@@ -30,8 +31,11 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
       // Remove `$schema` property so JSON Forms doesn't freak out
       delete mergedSchemas['$schema']
       // Remove the required property `linked_schemas` from form so it will validate
-      let filteredRequirements = mergedSchemas.required
-      mergedSchemas.required = filteredRequirements.filter(req => req !== 'linked_schemas')
+      let schemaRequiredProperties = mergedSchemas.required.filter(req => req !== 'linked_schemas')
+      // Then merge together all other required properties from the selected schemas
+      requiredProperties = union(requiredProperties, schemaRequiredProperties)
+      mergedSchemas.required = requiredProperties
+      console.log(mergedSchemas.required)
       // Remove `linked_schemas` so user does not have to type them in
       delete mergedSchemas.properties.linked_schemas
     }
