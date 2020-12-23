@@ -47,6 +47,9 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
     schemaList.data.map(schema => {
       if (schemas.find(s => s === schema.name)) {
         selectedSchemas[schema.name] = true
+        if (!state[schema.name]) {
+          dispatch({ type: 'toggle', name: schema.name })
+        }
       } else {
         selectedSchemas[schema.name] = false
       }
