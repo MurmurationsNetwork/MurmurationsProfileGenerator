@@ -1,22 +1,26 @@
 import { Button, HStack, Text } from '@chakra-ui/react'
-import Router from 'next/router'
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
+import Router from 'next/router'
 import { useState } from 'react'
+
+import { deleteNode } from '@/lib/api'
+import { deleteProfile } from '@/lib/db'
 
 export default function DashboardProfiles({ profiles, setProfile }) {
   const [selectedNodeId, setSelectedNodeId] = useState('')
   const [selectedHostId, setSelectedHostId] = useState('')
-
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
 
   function handleUpdate(node_id) {
     fetch(`/api/${node_id}`)
@@ -33,7 +37,70 @@ export default function DashboardProfiles({ profiles, setProfile }) {
     setSelectedHostId(hostId)
   }
 
-  function deleteProfile() {
+  function deleteNodeProfile() {
+    if (selectedHostId) {
+      deleteProfile(selectedNodeId)
+        .then(() => {
+          return deleteNode(selectedNodeId)
+        })
+        .then(response => {
+          if (response.status === 200) {
+            toast({
+              title: 'Profile deleted',
+              description: 'The profile has been removed from the index.',
+              status: 'success',
+              duration: 5000,
+              isClosable: true
+            })
+          } else {
+            toast({
+              title: 'Error deleting profile',
+              description: 'There was an error when deleting the profile from the index.',
+              status: 'error',
+              duration: 5000,
+              isClosable: true
+            })
+          }
+        })
+    }
+    if (!selectedHostId) {
+      deleteNode(selectedNodeId).then(response => {
+        if (response.status === 200) {
+          toast({
+            title: 'Profile deleted',
+            description: 'The profile has been removed from the index.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+          })
+        } else if (response.status === 400) {
+          toast({
+            title: 'Profile still exists',
+            description:
+              'The profile must first be deleted from your node before it can be removed from the index.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          })
+        } else if (response.status === 404) {
+          toast({
+            title: 'Could not find profile',
+            description: 'The profile you submitted for deletion does not exist in the index.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          })
+        } else {
+          toast({
+            title: 'Error deleting profile',
+            description: 'There was an error when deleting the profile from the index.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          })
+        }
+      })
+    }
     setSelectedNodeId('')
     setSelectedHostId('')
     onClose()
@@ -71,7 +138,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={deleteProfile}>Delete</Button>
+            <Button onClick={deleteNodeProfile}>Delete</Button>
             <Button onClick={cancelDelete}>Cancel</Button>
           </ModalFooter>
         </ModalContent>

@@ -1,4 +1,4 @@
-import { getProfileStatus } from '@/lib/api'
+import { getNodeStatus } from '@/lib/api'
 import { deleteProfile } from '@/lib/db-admin'
 import { db } from '@/lib/firebase-admin'
 
@@ -13,7 +13,7 @@ export default async (_, res) => {
 
   await Promise.all(
     allProfiles.map(async profile => {
-      const profileStatus = await getProfileStatus(profile.node_id)
+      const profileStatus = await getNodeStatus(profile.node_id)
       if (profileStatus.data) {
         profile.status = profileStatus.data.status
         activeProfiles.push(profile)
