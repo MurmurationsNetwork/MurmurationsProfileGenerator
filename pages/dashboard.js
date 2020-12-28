@@ -9,7 +9,7 @@ import { useProfile } from '@/lib/profile'
 import fetcher from '@/utils/fetcher'
 
 export default function Dashboard() {
-  const { signinWithGithub, signout, user } = useAuth()
+  const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { resetProfile, setProfile } = useProfile()
   const { data, error } = useSWR(user ? '/api/profiles' : null, fetcher)
 
@@ -34,7 +34,10 @@ export default function Dashboard() {
             )}
           </>
         ) : (
-          <Button onClick={() => signinWithGithub()}>Sign In</Button>
+          <>
+            <Button onClick={() => signinWithGithub()}>Sign In - GitHub</Button>
+            <Button onClick={() => signinWithGoogle()}>Sign In - Google</Button>
+          </>
         )}
       </div>
     </AppShell>
