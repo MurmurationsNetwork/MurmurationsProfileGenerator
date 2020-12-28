@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import Router from 'next/router'
 import { useState } from 'react'
+import { mutate } from 'swr'
 
 import { deleteNode } from '@/lib/api'
 import { deleteProfile } from '@/lib/db'
@@ -39,7 +40,16 @@ export default function DashboardProfiles({ profiles, setProfile }) {
 
   function deleteNodeProfile() {
     if (selectedHostId) {
-      deleteProfile(selectedNodeId)
+      mutate(
+        '/api/profiles',
+        async data => {
+          return {
+            profiles: data.filter(profile => profile.node_id !== selectedNodeId)
+          }
+        },
+        false
+      )
+        .then(mutate('/api/profiles', deleteProfile(selectedNodeId)))
         .then(() => {
           return deleteNode(selectedNodeId)
         })
