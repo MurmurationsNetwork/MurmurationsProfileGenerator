@@ -41,16 +41,38 @@ export default function DashboardProfiles({ profiles, setProfile }) {
   }
 
   function deleteNodeProfile() {
-    mutate(
-      ['/api/profiles', auth.user.token],
-      async data => data.filter(profile => profile.node_id !== selectedNodeId),
-      false
-    )
-      .then(mutate('/api/profiles', deleteProfile(selectedNodeId)))
-      .then(() => {
-        return deleteNode(selectedNodeId)
-      })
-      .then(response => {
+    if (selectedHostId) {
+      mutate(
+        ['/api/profiles', auth.user.token],
+        async data => data.filter(profile => profile.node_id !== selectedNodeId),
+        false
+      )
+        .then(mutate('/api/profiles', deleteProfile(selectedNodeId)))
+        .then(() => {
+          return deleteNode(selectedNodeId)
+        })
+        .then(response => {
+          if (response.status === 200) {
+            toast({
+              title: 'Profile deleted',
+              description: 'The profile has been removed from the index.',
+              status: 'success',
+              duration: 5000,
+              isClosable: true
+            })
+          } else {
+            toast({
+              title: 'Error deleting profile',
+              description: 'There was an error when deleting the profile from the index.',
+              status: 'error',
+              duration: 5000,
+              isClosable: true
+            })
+          }
+        })
+    }
+    if (!selectedHostId) {
+      deleteNode(selectedNodeId).then(response => {
         if (response.status === 200) {
           toast({
             title: 'Profile deleted',
@@ -86,6 +108,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
           })
         }
       })
+    }
     setSelectedNodeId('')
     setSelectedHostId('')
     onClose()
