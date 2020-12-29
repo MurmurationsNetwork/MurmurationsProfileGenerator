@@ -3,7 +3,7 @@ import cuid from 'cuid'
 import { sha256 } from 'js-sha256'
 import { useEffect, useState } from 'react'
 
-import { postProfileUrl } from '@/lib/api'
+import { postNode } from '@/lib/api'
 import { createProfile } from '@/lib/db'
 
 export default function ProfilePostProfile({ profile, setProfile, user }) {
@@ -18,7 +18,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
     profile.url ? setProfileUrl(profile.url) : undefined
   }, [])
   useEffect(() => {
-    async function postNode() {
+    async function postNodeProfile() {
       if (posted) {
         // Remove superfluous step parameter from being posted to DB
         // eslint-disable-next-line
@@ -36,11 +36,11 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         }
 
         await createProfile(postingProfile.node_id, postingProfile)
-        await postProfileUrl(postingProfile.url)
+        await postNode(postingProfile.url)
       }
     }
 
-    postNode()
+    postNodeProfile()
   }, [posted])
 
   function handleToggle() {

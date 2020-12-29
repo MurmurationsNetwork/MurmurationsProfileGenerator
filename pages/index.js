@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Index() {
-  const { signinWithGithub, user } = useAuth()
+  const { signinWithGithub, signinWithGoogle, user } = useAuth()
   const { resetProfile } = useProfile()
 
   return (
@@ -24,7 +24,8 @@ export default function Index() {
             <NextLink href="/profile">
               <Button onClick={resetProfile}>Create Profile</Button>
             </NextLink>
-            <Button onClick={() => signinWithGithub('/dashboard')}>Sign In</Button>
+            <Button onClick={() => signinWithGithub('/dashboard')}>Sign In - GitHub</Button>
+            <Button onClick={() => signinWithGoogle('/dashboard')}>Sign In - Google</Button>
           </>
         )}
       </div>

@@ -6,12 +6,12 @@ import AppShell from '@/components/AppShell'
 import DashboardProfiles from '@/components/DashboardProfiles'
 import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
-import fetcher from '@/utils/fetcher'
+import fetcher from '@/utils/fb-fetcher'
 
 export default function Dashboard() {
-  const { signinWithGithub, signout, user } = useAuth()
+  const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { resetProfile, setProfile } = useProfile()
-  const { data, error } = useSWR(user ? '/api/profiles' : null, fetcher)
+  const { data, error } = useSWR(user ? ['/api/profiles', user.token] : null, fetcher)
 
   if (error) console.error('useSWR /api/profiles', error)
 
@@ -34,7 +34,10 @@ export default function Dashboard() {
             )}
           </>
         ) : (
-          <Button onClick={() => signinWithGithub()}>Sign In</Button>
+          <>
+            <Button onClick={() => signinWithGithub()}>Sign In - GitHub</Button>
+            <Button onClick={() => signinWithGoogle()}>Sign In - Google</Button>
+          </>
         )}
       </div>
     </AppShell>

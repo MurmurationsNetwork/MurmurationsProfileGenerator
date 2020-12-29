@@ -1,27 +1,13 @@
-import { getNodeStatus } from '@/lib/api'
-import { deleteProfile } from '@/lib/db-admin'
-import { db } from '@/lib/firebase-admin'
+import { getUserProfiles } from '@/lib/db-admin'
+import { auth } from '@/lib/firebase-admin'
 
-export default async (_, res) => {
-  const snapshot = await db.collection('profiles').get()
-  const allProfiles = []
-  const activeProfiles = []
+export default async (req, res) => {
+  try {
+    const { uid } = await auth.verifyIdToken(req.headers.token)
+    const profiles = await getUserProfiles(uid)
 
-  snapshot.forEach(doc => {
-    allProfiles.push(doc.data())
-  })
-
-  await Promise.all(
-    allProfiles.map(async profile => {
-      const profileStatus = await getNodeStatus(profile.node_id)
-      if (profileStatus.data) {
-        profile.status = profileStatus.data.status
-        activeProfiles.push(profile)
-      } else {
-        deleteProfile(profile.node_id)
-      }
-    })
-  )
-
-  return res.status(200).json(activeProfiles)
+    res.status(200).json(profiles)
+  } catch (error) {
+    res.status(500).json({ error })
+  }
 }

@@ -15,12 +15,14 @@ import { useState } from 'react'
 import { mutate } from 'swr'
 
 import { deleteNode } from '@/lib/api'
+import { useAuth } from '@/lib/auth'
 import { deleteProfile } from '@/lib/db'
 
 export default function DashboardProfiles({ profiles, setProfile }) {
   const [selectedNodeId, setSelectedNodeId] = useState('')
   const [selectedHostId, setSelectedHostId] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const auth = useAuth()
   const toast = useToast()
 
   function handleUpdate(node_id) {
@@ -41,12 +43,8 @@ export default function DashboardProfiles({ profiles, setProfile }) {
   function deleteNodeProfile() {
     if (selectedHostId) {
       mutate(
-        '/api/profiles',
-        async data => {
-          return {
-            profiles: data.filter(profile => profile.node_id !== selectedNodeId)
-          }
-        },
+        ['/api/profiles', auth.user.token],
+        async data => data.filter(profile => profile.node_id !== selectedNodeId),
         false
       )
         .then(mutate('/api/profiles', deleteProfile(selectedNodeId)))

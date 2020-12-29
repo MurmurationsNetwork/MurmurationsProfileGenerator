@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Profile() {
-  const { signinWithGithub, signout, user } = useAuth()
+  const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { profile, setProfile } = useProfile()
 
   return (
@@ -25,7 +25,10 @@ export default function Profile() {
         {user ? (
           <Button onClick={() => signout()}>Sign Out</Button>
         ) : (
-          <Button onClick={() => signinWithGithub()}>Sign In</Button>
+          <>
+            <Button onClick={() => signinWithGithub()}>Sign In - GitHub</Button>
+            <Button onClick={() => signinWithGoogle()}>Sign In - Google</Button>
+          </>
         )}
         <>
           {profile.step === 1 ? (
