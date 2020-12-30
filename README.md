@@ -13,7 +13,7 @@ service cloud.firestore {
       allow read: if isOwner();
       allow delete: if isOwner();
       allow update: if isOwner() && willBeOwner();
-      allow create: if willBeOwner();
+      allow create: if true;
     }
   }
 }

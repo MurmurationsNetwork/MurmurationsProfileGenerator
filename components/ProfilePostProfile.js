@@ -89,7 +89,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         <div>
           <Button onClick={() => setProfile({ ...profile, step: 2 })}>Back</Button>
           <Button onClick={handleSubmit}>Next</Button>
-          {!profile.hostId && (
+          {!profile.hostId && user && (
             <>
               <Switch onChange={handleToggle} />
               <Text as="span">Host profile for me</Text>
