@@ -128,9 +128,11 @@ export default function DashboardProfiles({ profiles, setProfile }) {
           <Button onClick={() => handleDelete(profile.node_id, profile.hostId)}>Delete</Button>
           <Text>
             <strong>{profile.status}</strong> --{' '}
-            {profile.updated ? new Date(profile.updated).toISOString() : null} -- {profile.url} --{' '}
-            {profile.schemas}
+            {profile.updated ? new Date(profile.updated).toISOString() : null} -- {profile.url}
           </Text>
+          {profile.schemaNames?.map(schema => {
+            return <Text>{schema}</Text>
+          })}
         </HStack>
       ))}
       <Modal isOpen={isOpen} onClose={onClose}>
