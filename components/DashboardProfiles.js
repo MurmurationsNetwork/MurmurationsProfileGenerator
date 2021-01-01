@@ -131,7 +131,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             {profile.url}
           </Text>
           {profile.schemaNames.map(schema => {
-            return <Text>{schema}</Text>
+            return <Text key={schema}>{schema}</Text>
           })}
         </HStack>
       ))}
