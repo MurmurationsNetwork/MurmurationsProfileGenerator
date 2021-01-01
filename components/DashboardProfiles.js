@@ -127,7 +127,9 @@ export default function DashboardProfiles({ profiles, setProfile }) {
           <Button onClick={() => handleUpdate(profile.node_id)}>Update</Button>
           <Button onClick={() => handleDelete(profile.node_id, profile.hostId)}>Delete</Button>
           <Text>
-            <strong>{profile.status}</strong> -- {profile.url} - {profile.schemas}
+            <strong>{profile.status}</strong> --{' '}
+            {profile.updated ? new Date(profile.updated).toISOString() : null} -- {profile.url} --{' '}
+            {profile.schemas}
           </Text>
         </HStack>
       ))}

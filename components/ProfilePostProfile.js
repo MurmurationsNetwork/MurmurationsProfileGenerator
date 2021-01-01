@@ -23,6 +23,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         // Remove superfluous step parameter from being posted to DB
         // eslint-disable-next-line
         const { step, ...postingProfile } = profile
+        postingProfile.updated = Date.now()
 
         if (hosted && !postingProfile.hostId) {
           const hostId = cuid()
