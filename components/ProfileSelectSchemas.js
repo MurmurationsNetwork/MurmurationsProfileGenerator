@@ -6,27 +6,19 @@ import useSWR from 'swr'
 import fetcher from '@/utils/fetcher'
 
 function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
-  return (
-    schemaList.data
-      // Remove the default schema which is only used by the index
-      // for initial validation
-      .filter(schema => schema.name !== 'default-v1')
-      .map(schema => {
-        return (
-          <Text key={schema.name}>
-            <input
-              type="checkbox"
-              defaultChecked={selectedSchemas[schema.name]}
-              onClick={() => dispatch({ type: 'toggle', name: schema.name })}
-            />
-            <a href={schema.url} rel="noreferrer" target="_blank">
-              <strong>{schema.title}</strong>
-            </a>{' '}
-            (version {schema.version}) -- {schema.description}
-          </Text>
-        )
-      })
-  )
+  return schemaList.map(schema => (
+    <Text key={schema.name}>
+      <input
+        type="checkbox"
+        defaultChecked={selectedSchemas[schema.name]}
+        onClick={() => dispatch({ type: 'toggle', name: schema.name })}
+      />
+      <a href={schema.url} rel="noreferrer" target="_blank">
+        <strong>{schema.title}</strong>
+      </a>{' '}
+      (version {schema.version}) -- {schema.description}
+    </Text>
+  ))
 }
 
 export default function ProfileSelectSchemas({ profile, setProfile }) {
@@ -43,8 +35,19 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   if (error) console.error('fetch schemaList', error)
 
   if (data) {
-    schemaList = data
-    schemaList.data.map(schema => {
+    // Remove the default schema which is only used by the index for initial validation
+    const initialList = data.data.filter(schema => schema.name !== 'default-v1')
+
+    const removeOldVersions = (acc, cv) => {
+      const found = acc.find(({ title }) => title === cv.title)
+      if (found?.version < cv.version) acc = acc.filter(obj => obj.name !== found.name)
+      acc.push(cv)
+      return acc
+    }
+
+    schemaList = initialList.reduce(removeOldVersions, [])
+
+    schemaList.map(schema => {
       if (schemas.find(s => s === schema.name)) {
         selectedSchemas[schema.name] = true
         if (!state[schema.name]) {
