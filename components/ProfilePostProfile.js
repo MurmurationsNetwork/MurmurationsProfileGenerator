@@ -96,9 +96,21 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
               <Text as="span">Host profile for me</Text>
             </>
           )}
+          {!user && (
+            <>
+              <Switch isDisabled={true} />
+              <Text as="span">Host profile for me</Text>
+              <Text color="tomato">
+                Sign in above to host your profile with us and/or manage your profiles after you
+                create them
+              </Text>
+            </>
+          )}
           {!hosted && (
             <>
-              <Text>Enter the URL where your profile will be hosted:</Text>
+              <Text>
+                Or enter the URL (usually at your own website) where you will host your profile:
+              </Text>
               <Input
                 name="profileUrl"
                 type="text"
@@ -111,7 +123,9 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
           {submitted === true && hosted === false && profileUrl.length < 1 ? (
             <Text>You need to enter a profile URL!</Text>
           ) : null}
-          <Text as="pre">{JSON.stringify(profile.json, null, 2)}</Text>
+          <Text as="pre" bg="gray.200">
+            {JSON.stringify(profile.json, null, 2)}
+          </Text>
         </div>
       )}
     </div>
