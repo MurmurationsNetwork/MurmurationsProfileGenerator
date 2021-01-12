@@ -128,7 +128,11 @@ export default function DashboardProfiles({ profiles, setProfile }) {
           <Button onClick={() => handleDelete(profile.node_id, profile.hostId)}>Delete</Button>
           <Text>
             <strong>{profile.status}</strong> -- {new Date(profile.updated).toISOString()} --{' '}
-            {profile.url}
+          </Text>
+          <Text as="u" color="blue.500">
+            <a href={profile.url} target="_blank">
+              {profile.url}
+            </a>
           </Text>
           {profile.schemaNames.map(schema => {
             return <Text key={schema}>{schema}</Text>
