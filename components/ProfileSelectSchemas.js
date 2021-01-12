@@ -81,7 +81,9 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
     <div>
       <Text>Select Schemas</Text>
       <Button onClick={handleClick}>Next</Button>
-      {selectError === true ? <Text>You need to select at least one network!</Text> : null}
+      {selectError === true ? (
+        <Text color="tomato">You need to select at least one network!</Text>
+      ) : null}
       {data ? (
         <ListSchemas
           dispatch={dispatch}
