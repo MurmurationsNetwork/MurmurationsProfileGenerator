@@ -68,7 +68,10 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
         ))}
       </Text>
       {!valid && profileSubmitted ? (
-        <Text>You have not filled in all of the required fields.</Text>
+        <Text color="tomato">
+          Please check any error messages in the form to ensure you have completed all fields and
+          that they meet all of their requirements.
+        </Text>
       ) : null}
       <JsonForms
         schema={allSchemas}

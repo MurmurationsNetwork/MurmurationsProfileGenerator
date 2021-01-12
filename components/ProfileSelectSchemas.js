@@ -47,16 +47,20 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
 
     schemaList = initialList.reduce(removeOldVersions, [])
 
-    schemaList.map(schema => {
-      if (schemas.find(s => s === schema.name)) {
-        selectedSchemas[schema.name] = true
-        if (!state[schema.name]) {
-          dispatch({ type: 'toggle', name: schema.name })
-        }
-      } else {
-        selectedSchemas[schema.name] = false
-      }
-    })
+    // TODO: Figure out how to only map over schemaList once so that going from step 2
+    // back to step 1 does not cause the reducer state to get stuck to the schemas
+    // listed in the profile state.
+
+    // schemaList.map(schema => {
+    //   if (schemas.find(s => s === schema.name)) {
+    //     selectedSchemas[schema.name] = true
+    //     if (!state[schema.name]) {
+    //       dispatch({ type: 'toggle', name: schema.name })
+    //     }
+    //   } else {
+    //     selectedSchemas[schema.name] = false
+    //   }
+    // })
   }
 
   function reducer(state, action) {
@@ -81,7 +85,9 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
     <div>
       <Text>Select Schemas</Text>
       <Button onClick={handleClick}>Next</Button>
-      {selectError === true ? <Text>You need to select at least one network!</Text> : null}
+      {selectError === true ? (
+        <Text color="tomato">You need to select at least one network!</Text>
+      ) : null}
       {data ? (
         <ListSchemas
           dispatch={dispatch}

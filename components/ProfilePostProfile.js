@@ -121,7 +121,7 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
             </>
           )}
           {submitted === true && hosted === false && profileUrl.length < 1 ? (
-            <Text>You need to enter a profile URL!</Text>
+            <Text color="tomato">You need to enter a profile URL!</Text>
           ) : null}
           <Text as="pre" bg="gray.200">
             {JSON.stringify(profile.json, null, 2)}

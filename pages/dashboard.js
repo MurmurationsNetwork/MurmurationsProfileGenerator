@@ -11,7 +11,9 @@ import fetcher from '@/utils/fb-fetcher'
 export default function Dashboard() {
   const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { resetProfile, setProfile } = useProfile()
-  const { data, error } = useSWR(user ? ['/api/profiles', user.token] : null, fetcher)
+  const { data, error } = useSWR(user ? ['/api/profiles', user.token] : null, fetcher, {
+    refreshInterval: 5000
+  })
 
   if (error) console.error('useSWR /api/profiles', error)
 
