@@ -40,6 +40,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/pickers": "^3.2.10",
     "cuid": "^2.1.8",
+    "date-fns": "^2.16.1",
     "firebase": "^8.1.1",
     "firebase-admin": "^9.4.2",
     "framer-motion": "^2.9.5",
