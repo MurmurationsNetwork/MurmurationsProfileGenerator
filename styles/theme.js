@@ -12,7 +12,7 @@ const customTheme = extendTheme({
   },
   textStyles: {
     h2: {
-      letterSpacing: '2.5px',
+      letterSpacing: '0.05em',
       fontSize: '250%'
     }
   }
