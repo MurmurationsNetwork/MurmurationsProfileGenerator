@@ -1,6 +1,7 @@
+import { compareDesc } from 'date-fns'
+
 import { getUserProfiles } from '@/lib/db-admin'
 import { auth } from '@/lib/firebase-admin'
-import { compareDesc } from 'date-fns'
 
 export default async (req, res) => {
   try {

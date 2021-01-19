@@ -26,7 +26,7 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)
   const [selectError, setSelectError] = useState(false)
-  const { schemas } = profile
+  // const { schemas } = profile
   const { data, error } = useSWR(
     process.env.NEXT_PUBLIC_MURMURATIONS_LIBRARY_API_URL + '/schemas',
     fetcher

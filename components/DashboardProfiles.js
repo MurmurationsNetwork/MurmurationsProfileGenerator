@@ -130,7 +130,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             <strong>{profile.status}</strong> -- {new Date(profile.updated).toISOString()} --{' '}
           </Text>
           <Text as="u" color="blue.500">
-            <a href={profile.url} target="_blank">
+            <a href={profile.url} target="_blank" rel="noreferrer noopener">
               {profile.url}
             </a>
           </Text>

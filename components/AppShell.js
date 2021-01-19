@@ -10,7 +10,7 @@ export default function AppShell({ children }) {
         eventually be wiped (probably in early February 2021 if not before).
       </Text>
       <Text align="center" color="tomato">
-        Don't post any information you would not be comfortable revealing on a public website
+        Don@apos;t post any information you would not be comfortable revealing on a public website
         accessible to the world.
       </Text>
       <Button onClick={toggleColorMode}>{colorMode === 'light' ? '🌙' : '☀️'}</Button>
