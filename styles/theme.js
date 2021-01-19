@@ -11,9 +11,17 @@ const customTheme = extendTheme({
     bold: 700
   },
   textStyles: {
-    h2: {
+    h1: {
       letterSpacing: '0.05em',
       fontSize: '250%'
+    },
+    h3: {
+      letterSpacing: '0.05em',
+      fontSize: '135%'
+    },
+    h4: {
+      letterSpacing: '0.05em',
+      fontSize: '100%'
     }
   }
 })
