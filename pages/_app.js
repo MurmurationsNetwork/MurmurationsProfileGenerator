@@ -19,6 +19,13 @@ const GlobalStyle = ({ children }) => {
             flex-direction: column;
             min-height: 100vh;
           }
+          @font-face {
+            font-family: 'Baskerville';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(Baskerville-Semibold.otf) format('otf');
+          }
         `}
       />
       {children}

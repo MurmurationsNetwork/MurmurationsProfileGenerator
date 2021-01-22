@@ -40,7 +40,7 @@ const customTheme = extendTheme({
     }
   },
   fonts: {
-    heading: `"Libre Baskervville",serif`,
+    heading: `"Baskerville",serif`,
     body: `Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`
   },
   fontWeights: {
