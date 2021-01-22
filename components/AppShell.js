@@ -10,7 +10,6 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react'
-import NextLink from 'next/link'
 import {
   Modal,
   ModalBody,
@@ -20,6 +19,7 @@ import {
   ModalOverlay,
   useDisclosure
 } from '@chakra-ui/react'
+import NextLink from 'next/link'
 
 import { useAuth } from '@/lib/auth'
 
@@ -60,19 +60,43 @@ export default function AppShell({ children }) {
                 width={['50px', '75px', '100px']}
                 src="murmurations-logo.png"
                 alt="Murmurations"
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
               />
             </NextLink>
           </Flex>
           <Stack spacing={[8, 12, 16, 24]} isInline alignItems="center" mb={{ base: 2, md: 0 }}>
             <NextLink href="/dashboard">
-              <Link color="gray.500">Dashboard</Link>
+              <Link
+                color="gray.500"
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
+              >
+                Dashboard
+              </Link>
             </NextLink>
             {user ? (
-              <Link color="gray.500" onClick={() => signout()}>
+              // eslint-disable-next-line
+              <Link
+                color="gray.500"
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
+                onClick={() => signout()}
+              >
                 Sign Out
               </Link>
             ) : (
-              <Link color="gray.500" onClick={() => handleSignIn()}>
+              // eslint-disable-next-line
+              <Link
+                color="gray.500"
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
+                onClick={() => handleSignIn()}
+              >
                 Sign In
               </Link>
             )}
@@ -84,6 +108,9 @@ export default function AppShell({ children }) {
                 colorScheme="red"
                 borderRadius="25px"
                 height={[6, 7, 8, 10]}
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
               >
                 New Profile
               </Button>
@@ -99,16 +126,9 @@ export default function AppShell({ children }) {
         {/* 
         F O O T E R  -  S t a r t
         */}
-        <Flex
-          backgroundColor="gray.50"
-          px={[4, 8, 16, 0]}
-          bottom={'0px'}
-          pos={'absolute'}
-          width="100%"
-          maxWidth="75rem"
-        >
+        <Flex backgroundColor="gray.50" px={[4, 8, 16, 0]} width="100%" maxWidth="75rem">
           <Flex mx="auto" width="100%" maxWidth="780px" flexDirection="column">
-            <Heading textAlign="center" my={{ base: 6, md: 12 }} textStyle="h4" color="gray.900">
+            <Heading textAlign="center" my={{ base: 6, md: 12 }} textStyle="h4" color="gray.800">
               Murmurations Protocol
             </Heading>
             <Stack
@@ -174,6 +194,7 @@ export default function AppShell({ children }) {
                     Sign in with Google
                   </Button>
                 </HStack>
+                {/* TODO: Add Twitter Login */}
                 {/* <HStack spacing={8}>
                   <Image height={8} src="twitter-yellow.svg" alt="Twitter" />
                   <Button
