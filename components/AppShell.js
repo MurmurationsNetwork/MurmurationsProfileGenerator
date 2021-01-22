@@ -29,6 +29,16 @@ export default function AppShell({ children }) {
     onOpen()
   }
 
+  function signinGithub() {
+    signinWithGithub()
+    onClose()
+  }
+
+  function signinGoogle() {
+    signinWithGoogle()
+    onClose()
+  }
+
   return (
     <Flex bg="gray.100">
       <Flex
@@ -176,7 +186,7 @@ export default function AppShell({ children }) {
                     colorScheme="yellow"
                     color="white"
                     borderRadius="2xl"
-                    onClick={() => signinWithGithub()}
+                    onClick={() => signinGithub()}
                   >
                     Sign in with GitHub
                   </Button>
@@ -187,7 +197,7 @@ export default function AppShell({ children }) {
                     colorScheme="yellow"
                     color="white"
                     borderRadius="2xl"
-                    onClick={() => signinWithGoogle()}
+                    onClick={() => signinGoogle()}
                   >
                     Sign in with Google
                   </Button>

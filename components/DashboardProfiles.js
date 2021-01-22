@@ -57,6 +57,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
               title: 'Profile deleted',
               description: 'The profile has been removed from the index.',
               status: 'success',
+              position: 'top',
               duration: 5000,
               isClosable: true
             })
@@ -65,6 +66,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
               title: 'Error deleting profile',
               description: 'There was an error when deleting the profile from the index.',
               status: 'error',
+              position: 'top',
               duration: 5000,
               isClosable: true
             })
@@ -78,6 +80,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             title: 'Profile deleted',
             description: 'The profile has been removed from the index.',
             status: 'success',
+            position: 'top',
             duration: 5000,
             isClosable: true
           })
@@ -87,6 +90,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             description:
               'The profile must first be deleted from your node before it can be removed from the index.',
             status: 'error',
+            position: 'top',
             duration: 5000,
             isClosable: true
           })
@@ -95,6 +99,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             title: 'Could not find profile',
             description: 'The profile you submitted for deletion does not exist in the index.',
             status: 'error',
+            position: 'top',
             duration: 5000,
             isClosable: true
           })
@@ -103,6 +108,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             title: 'Error deleting profile',
             description: 'There was an error when deleting the profile from the index.',
             status: 'error',
+            position: 'top',
             duration: 5000,
             isClosable: true
           })
