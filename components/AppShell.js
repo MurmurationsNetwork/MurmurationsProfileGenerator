@@ -5,19 +5,17 @@ import {
   HStack,
   Image,
   Link,
-  ModalFooter,
-  Stack,
-  Text,
-  VStack
-} from '@chakra-ui/react'
-import {
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  Stack,
+  Text,
+  useDisclosure,
+  VStack
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 
@@ -32,7 +30,7 @@ export default function AppShell({ children }) {
   }
 
   return (
-    <Flex bg="white" height="100vh">
+    <Flex bg="gray.100">
       <Flex
         flexDirection="column"
         width="100%"
@@ -127,9 +125,9 @@ export default function AppShell({ children }) {
         F O O T E R  -  S t a r t
         */}
         <Flex backgroundColor="gray.50" px={[4, 8, 16, 0]} width="100%" maxWidth="75rem">
-          <Flex mx="auto" width="100%" maxWidth="780px" flexDirection="column">
+          <Flex mx="auto" width="100%" maxWidth="75rem" flexDirection="column">
             <Heading textAlign="center" my={{ base: 6, md: 12 }} textStyle="h4" color="gray.800">
-              Murmurations Protocol
+              Murmurations Network
             </Heading>
             <Stack
               spacing={[8, 12, 16, 24]}

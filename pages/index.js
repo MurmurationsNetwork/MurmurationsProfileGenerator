@@ -207,7 +207,7 @@ export default function Index() {
           flexDirection="column"
         >
           <Text textAlign="center" mb={{ base: 4, md: 8 }}>
-            Would you like to learn more about the Murmurations Network?
+            Would you like to learn more about the Murmurations Protocol?
           </Text>
           <Stack spacing={2} flexDirection="row" isInline justifyContent="space-around">
             <Button
