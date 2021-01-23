@@ -136,7 +136,13 @@ export default function AppShell({ children }) {
         */}
         <Flex backgroundColor="gray.50" px={[4, 8, 16, 0]} width="100%" maxWidth="75rem">
           <Flex mx="auto" width="100%" maxWidth="75rem" flexDirection="column">
-            <Heading textAlign="center" my={{ base: 6, md: 12 }} textStyle="h4" color="gray.800">
+            <Heading
+              textAlign="center"
+              mt={{ base: 6, md: 12 }}
+              mb={{ base: 4, md: 9 }}
+              textStyle="h4"
+              color="gray.800"
+            >
               Murmurations Network
             </Heading>
             <Stack

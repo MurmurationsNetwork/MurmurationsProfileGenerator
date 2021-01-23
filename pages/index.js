@@ -177,12 +177,12 @@ export default function Index() {
       <Flex backgroundColor="yellow.300" px={[4, 8, 16, 0]}>
         <Flex
           mx="auto"
-          my={{ base: 4, md: 4 }}
+          my={{ base: 6, md: 12 }}
           width="100%"
           maxWidth="780px"
           flexDirection="column"
         >
-          <Heading as="h3" textStyle="h3" color="white">
+          <Heading as="h3" textStyle="h3" color="white" mb={{ base: 3, md: 6 }}>
             Optional login—we respect your privacy
           </Heading>
           <Text>
@@ -209,7 +209,7 @@ export default function Index() {
           <Text textAlign="center" mb={{ base: 4, md: 8 }}>
             Would you like to learn more about the Murmurations Protocol?
           </Text>
-          <Stack spacing={2} flexDirection="row" isInline justifyContent="space-around">
+          <Stack spacing={12} flexDirection="row" isInline justifyContent="center">
             <Button
               variant="outline"
               size="md"
@@ -217,7 +217,6 @@ export default function Index() {
               colorScheme="yellow"
               borderRadius="15px"
               height={[6, 7, 8, 10]}
-              // _hover={{ textDecoration: 'none' }}
               _active={{
                 transform: 'scale(0.95)'
               }}
