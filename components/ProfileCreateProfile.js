@@ -1,10 +1,11 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Button, Link, Text } from '@chakra-ui/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { JsonForms } from '@jsonforms/react'
 import { isEqual, merge, union } from 'lodash'
 import { useEffect, useState } from 'react'
 
 import parser from '@/utils/parser'
+import Geolocation from '@/components/Geolocation'
 
 export default function ProfileCreateProfile({ profile, setProfile }) {
   const [validationErrors, setValidationErrors] = useState([])
@@ -13,6 +14,9 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   const [formData, setFormData] = useState(profile.json)
   const [allSchemas, setAllSchemas] = useState(mergedSchemas)
   const [schemaList, setSchemaList] = useState([])
+  const [formHasGeolocation, setFormHasGeolocation] = useState(false)
+  const [clickedGeolocation, setClickedGeolocation] = useState(false)
+
   const selectedSchemas = profile.schemas
   let mergedSchemas = { type: 'object', properties: {} }
   let requiredProperties = []
@@ -36,11 +40,17 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
           mergedSchemas.required = requiredProperties
           // Remove `linked_schemas` so user does not have to type them in
           delete mergedSchemas.properties.linked_schemas
+          mergedSchemas.properties.geolocation ? setFormHasGeolocation(true) : null
           setAllSchemas(mergedSchemas)
         })
         .catch(error => console.error('parse schema', error))
     })
   }, [])
+
+  function handleClickGeo(e) {
+    e.preventDefault()
+    setClickedGeolocation(true)
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -58,9 +68,29 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
       <Text>Create Schema</Text>
       <Button onClick={() => setProfile({ ...profile, step: 1, json: formData })}>Back</Button>
       <Button onClick={handleSubmit}>Next</Button>
-      <Button onClick={() => setFormData({ ...formData, geolocation: { lat: 12, lon: 13 } })}>
-        Geolocation
-      </Button>
+      {formHasGeolocation ? (
+        <>
+          <Button onClick={handleClickGeo}>Geolocation</Button>
+          {clickedGeolocation ? (
+            <Geolocation formData={formData} setFormData={setFormData} />
+          ) : (
+            <>
+              <Text>
+                The profile form asks for your geolocation coordinates. To get your current
+                location, click the Geolocation button above and then allow your browser to let this
+                website know your location.
+              </Text>
+              <Text>
+                If you prefer to give less specific location information,{' '}
+                <Link href="https://www.latlong.net/" color="orange.500" isExternal>
+                  use this website
+                </Link>{' '}
+                to determine your latitude and longitude.
+              </Text>
+            </>
+          )}
+        </>
+      ) : null}
       <Text>
         Using the following schema{schemaList.length > 1 ? <span>s</span> : null}:{' '}
         {schemaList.map(schema => (
