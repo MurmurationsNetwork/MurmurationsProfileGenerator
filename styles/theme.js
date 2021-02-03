@@ -51,7 +51,7 @@ const customTheme = extendTheme({
   textStyles: {
     h1: {
       letterSpacing: '0.05em',
-      fontSize: '250%'
+      fontSize: { base: '150%', md: '250%' }
     },
     h3: {
       letterSpacing: '0.05em',

@@ -4,8 +4,8 @@ import { JsonForms } from '@jsonforms/react'
 import { isEqual, merge, union } from 'lodash'
 import { useEffect, useState } from 'react'
 
-import parser from '@/utils/parser'
 import Geolocation from '@/components/Geolocation'
+import parser from '@/utils/parser'
 
 export default function ProfileCreateProfile({ profile, setProfile }) {
   const [validationErrors, setValidationErrors] = useState([])
