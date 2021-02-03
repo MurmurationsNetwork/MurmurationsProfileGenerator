@@ -17,7 +17,8 @@ export default function Profile() {
       <Flex backgroundColor="white" px={[4, 8, 16, 0]}>
         <Flex
           mx="auto"
-          my={{ base: 8, md: 16 }}
+          mt={{ base: 8, md: 16 }}
+          mb={{ base: 2, md: 4 }}
           width="100%"
           maxWidth="50rem"
           flexDirection="column"
@@ -34,7 +35,7 @@ export default function Profile() {
           >
             <Image
               height={{ base: '8', md: '16' }}
-              src={profile.step === 1 ? 'step1-on.svg' : 'step1-off.svg'}
+              src={profile.step >= 1 ? 'step1-on.svg' : 'step1-off.svg'}
             />
             <Image
               width={{ base: '60px', md: '120px' }}
@@ -43,7 +44,7 @@ export default function Profile() {
             />
             <Image
               height={{ base: '8', md: '16' }}
-              src={profile.step === 2 ? 'step2-on.svg' : 'step2-off.svg'}
+              src={profile.step >= 2 ? 'step2-on.svg' : 'step2-off.svg'}
             />
             <Image
               width={{ base: '60px', md: '120px' }}
@@ -52,7 +53,7 @@ export default function Profile() {
             />
             <Image
               height={{ base: '8', md: '16' }}
-              src={profile.step === 3 ? 'step3-on.svg' : 'step3-off.svg'}
+              src={profile.step >= 3 ? 'step3-on.svg' : 'step3-off.svg'}
             />
           </Stack>
           <Text

@@ -1,23 +1,29 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Button, Checkbox, Flex, Heading, Link, Stack, Text, useToast } from '@chakra-ui/react'
 import { pickBy } from 'lodash'
-import { useReducer, useState } from 'react'
+import { useReducer } from 'react'
 import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
 
 function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
   return schemaList.map(schema => (
-    <Text key={schema.name}>
-      <input
-        type="checkbox"
+    <Stack spacing={2} isInline alignItems="flex-start" key={schema.name} mt={{ base: 4, md: 8 }}>
+      <Checkbox
+        mt={2}
+        colorScheme="yellow"
         defaultChecked={selectedSchemas[schema.name]}
-        onClick={() => dispatch({ type: 'toggle', name: schema.name })}
+        onChange={() => dispatch({ type: 'toggle', name: schema.name })}
       />
-      <a href={schema.url} rel="noreferrer" target="_blank">
-        <strong>{schema.title}</strong>
-      </a>{' '}
-      (version {schema.version}) -- {schema.description}
-    </Text>
+      <Flex flexDirection="column">
+        <Heading textStyle="h3">
+          <Link href={schema.url} isExternal textDecoration="underline">
+            {schema.title}
+          </Link>{' '}
+          (v{schema.version})
+        </Heading>
+        <Text>{schema.description}</Text>
+      </Flex>
+    </Stack>
   ))
 }
 
@@ -25,12 +31,12 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   let selectedSchemas = {}
   let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)
-  const [selectError, setSelectError] = useState(false)
   // const { schemas } = profile
   const { data, error } = useSWR(
     process.env.NEXT_PUBLIC_MURMURATIONS_LIBRARY_API_URL + '/schemas',
     fetcher
   )
+  const toast = useToast()
 
   if (error) console.error('fetch schemaList', error)
 
@@ -75,30 +81,76 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   function handleClick() {
     let pickedSchemas = Object.keys(pickBy(state))
     if (pickedSchemas.length === 0) {
-      setSelectError(true)
+      toast({
+        title: 'Error selecting schema',
+        description: 'You need to select at least one schema to continue.',
+        status: 'error',
+        position: 'top',
+        duration: 5000,
+        isClosable: true
+      })
     } else {
       setProfile({ ...profile, step: 2, schemas: pickedSchemas })
     }
   }
 
   return (
-    <div>
-      <Text>Select Schemas</Text>
-      <Button onClick={handleClick}>Next</Button>
-      {selectError === true ? (
-        <Text color="tomato">You need to select at least one network!</Text>
-      ) : null}
-      {data ? (
-        <ListSchemas
-          dispatch={dispatch}
-          schemaList={schemaList}
-          selectedSchemas={selectedSchemas}
-        />
-      ) : error ? (
-        <Text>There was an error loading the schema list.</Text>
-      ) : (
-        <Text>Loading...</Text>
-      )}
-    </div>
+    <Flex flexDirection="column">
+      <Flex
+        width="100%"
+        ml="auto"
+        mr="auto"
+        px={{ base: 2, md: 8, lg: 16 }}
+        py={{ base: 8, md: 12, lg: 16 }}
+        flexDirection="column"
+        maxWidth="65rem"
+        bg="gray.50"
+        borderRadius="5px"
+      >
+        {data ? (
+          <>
+            <Text>
+              You can use the same profile to add your data to multiple schemas at the same time.
+            </Text>
+            <Flex flexDirection="column">
+              <ListSchemas
+                dispatch={dispatch}
+                schemaList={schemaList}
+                selectedSchemas={selectedSchemas}
+              />
+            </Flex>
+          </>
+        ) : error ? (
+          <Text>There was an error loading the schema list.</Text>
+        ) : (
+          <Text>Loading...</Text>
+        )}
+      </Flex>
+      <Flex
+        width="100%"
+        ml="auto"
+        mr="auto"
+        my={{ base: 8, md: 16 }}
+        px="2"
+        flexDirection="column"
+        alignItems="flex-end"
+        maxWidth="65rem"
+      >
+        <Button
+          variant="solid"
+          size="md"
+          fontSize={{ base: 'md', md: 'lg' }}
+          colorScheme="red"
+          borderRadius="25px"
+          height={[6, 7, 8, 10]}
+          _active={{
+            transform: 'scale(0.95)'
+          }}
+          onClick={handleClick}
+        >
+          Continue to Step 2
+        </Button>
+      </Flex>
+    </Flex>
   )
 }
