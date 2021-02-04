@@ -83,7 +83,7 @@ export default function YourPosition({ formData, setFormData }) {
         <Text>Your current position is:</Text>
         <Text>Lat: {Number(position.coords.latitude.toFixed(4))}</Text>
         <Text>Lon: {Number(position.coords.longitude.toFixed(4))}</Text>
-        <Text>
+        <Text my="2">
           <Link
             color="orange.500"
             href={`https://maps.google.com/?q=${Number(
@@ -94,7 +94,19 @@ export default function YourPosition({ formData, setFormData }) {
             View on Google Maps
           </Link>
         </Text>
-        <Button onClick={() => setFormData({ ...formData, geolocation: { lat: lat, lon: lon } })}>
+        <Button
+          variant="outline"
+          fontSize={{ base: 'md', md: 'lg' }}
+          colorScheme="yellow"
+          borderRadius="25px"
+          height={[6, 7, 8, 10]}
+          my={4}
+          mx="auto"
+          _active={{
+            transform: 'scale(0.95)'
+          }}
+          onClick={() => setFormData({ ...formData, geolocation: { lat: lat, lon: lon } })}
+        >
           Add to Form
         </Button>
       </>
