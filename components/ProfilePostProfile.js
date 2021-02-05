@@ -1,4 +1,15 @@
-import { Button, Input, Switch, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Code,
+  Flex,
+  HStack,
+  Input,
+  Switch,
+  Text,
+  useClipboard,
+  useToast
+} from '@chakra-ui/react'
 import cuid from 'cuid'
 import { sha256 } from 'js-sha256'
 import { useEffect, useState } from 'react'
@@ -7,10 +18,12 @@ import { postNode } from '@/lib/api'
 import { createProfile } from '@/lib/db'
 
 export default function ProfilePostProfile({ profile, setProfile, user }) {
-  const [submitted, setSubmitted] = useState(false)
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
   const [hosted, setHosted] = useState(false)
+  const { hasCopied, onCopy } = useClipboard(JSON.stringify(profile.json, null, 2))
+  const toast = useToast()
+
   let profileJson = profile.json
 
   useEffect(() => {
@@ -49,14 +62,20 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   }
 
   function handleInput(e) {
-    setSubmitted(false)
     setProfileUrl(e.target.value)
   }
 
   function handleSubmit(e) {
     e.preventDefault()
-    setSubmitted(true)
     if (!hosted && profileUrl.length < 1) {
+      toast({
+        title: 'Error posting profile',
+        description: 'You need to enter a profile URL to indicate where your profile can be found.',
+        status: 'error',
+        position: 'top',
+        duration: 7500,
+        isClosable: true
+      })
       return
     }
     if (hosted) {
@@ -79,20 +98,145 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
   }
 
   return (
-    <div>
-      <Text>Post Schema</Text>
-      {posted === true ? (
+    <Flex flexDirection="column">
+      <Box px={{ base: 4, md: 16 }}>
+        <Text pb={4} fontWeight="600">
+          Your profile code has been created:
+        </Text>
+        <Code
+          as="pre"
+          variant="subtle"
+          width="100%"
+          whiteSpace="pre-wrap"
+          p={4}
+          borderRadius="10px"
+        >
+          {JSON.stringify(profile.json, null, 2)}
+        </Code>
+      </Box>
+      <Flex
+        width="100%"
+        mx="auto"
+        my={{ base: 8, md: 16 }}
+        px={{ base: 4, md: 8, lg: 16 }}
+        flexDirection={{ base: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Button
+          variant="outline"
+          size="md"
+          fontSize={{ base: 'md', md: 'lg' }}
+          colorScheme="red"
+          borderRadius="25px"
+          height={[6, 7, 8, 10]}
+          my={{ base: 2, md: 0 }}
+          minWidth="12rem"
+          _active={{
+            transform: 'scale(0.95)'
+          }}
+          onClick={() => setProfile({ ...profile, step: 2 })}
+        >
+          Back to Step 2
+        </Button>
+        <Button
+          variant="outline"
+          size="md"
+          fontSize={{ base: 'md', md: 'lg' }}
+          colorScheme="yellow"
+          borderRadius="25px"
+          height={[6, 7, 8, 10]}
+          my={{ base: 2, md: 0 }}
+          minWidth="12rem"
+          _active={{
+            transform: 'scale(0.95)'
+          }}
+          onClick={onCopy}
+        >
+          {hasCopied ? 'Profile Code Copied' : 'Copy Profile Code'}
+        </Button>
+      </Flex>
+      <Flex
+        width="100%"
+        bg="yellow.50"
+        py={{ base: 8, md: 16 }}
+        mx="auto"
+        // my={{ base: 8, md: 16 }}
+        px={{ base: 4, md: 8, lg: 16 }}
+        flexDirection="column"
+        // justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text mb={{ base: 4, md: 8 }}>
+          Please select where you would like to host your profile:
+        </Text>
+
+        {posted === true ? (
+          <Text>
+            The profile {!hosted ? `at <${profileUrl}>` : null} has been sent to the index for
+            validation and posting.
+          </Text>
+        ) : (
+          <>
+            {!profile.hostId && user && (
+              <HStack
+                bg="yellow.300"
+                padding={{ base: 4, md: 8 }}
+                spacing={{ base: 4, md: 16 }}
+                borderRadius="15px"
+              >
+                <Text fontWeight="600">My website</Text>
+                <Switch size="lg" colorScheme="yellow" onChange={handleToggle} />
+                <Text fontWeight="600">Here at MPG</Text>
+              </HStack>
+            )}
+            {!user && (
+              // TODO: Copy formatting from above
+              <>
+                <HStack spacing={{ base: 4, md: 16 }}>
+                  <Text as="span">Host it myself</Text>
+                  <Switch
+                    isDisabled={true}
+                    size="lg"
+                    colorScheme="yellow"
+                    onChange={handleToggle}
+                  />
+                  <Text as="span">Host it for me</Text>
+                </HStack>
+                <Text color="tomato">
+                  Sign in above to host your profile with us and/or manage your profiles after you
+                  create them
+                </Text>
+              </>
+            )}
+            {!hosted && (
+              <>
+                <Text>
+                  Or enter the URL (usually at your own website) where you will host your profile:
+                </Text>
+                <Input
+                  name="profileUrl"
+                  type="text"
+                  placeholder="example: https://your.site/subdirectory/profile.json"
+                  value={profileUrl}
+                  onChange={handleInput}
+                />
+              </>
+            )}
+            <Button onClick={handleSubmit}>Next</Button>
+          </>
+        )}
+      </Flex>
+      {/* {posted === true ? (
         <Text>
           The profile {!hosted ? `at <${profileUrl}>` : null} has been sent to the index for
           validation and posting.
         </Text>
       ) : (
         <div>
-          <Button onClick={() => setProfile({ ...profile, step: 2 })}>Back</Button>
-          <Button onClick={handleSubmit}>Next</Button>
           {!profile.hostId && user && (
             <>
-              <Switch onChange={handleToggle} />
+              <Switch size="lg" onChange={handleToggle} />
               <Text as="span">Host profile for me</Text>
             </>
           )}
@@ -105,8 +249,8 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
                 create them
               </Text>
             </>
-          )}
-          {!hosted && (
+          )} */}
+      {/* {!hosted && (
             <>
               <Text>
                 Or enter the URL (usually at your own website) where you will host your profile:
@@ -120,14 +264,8 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
               />
             </>
           )}
-          {submitted === true && hosted === false && profileUrl.length < 1 ? (
-            <Text color="tomato">You need to enter a profile URL!</Text>
-          ) : null}
-          <Text as="pre" bg="gray.200">
-            {JSON.stringify(profile.json, null, 2)}
-          </Text>
         </div>
-      )}
-    </div>
+      )} */}
+    </Flex>
   )
 }

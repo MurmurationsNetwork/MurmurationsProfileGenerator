@@ -100,7 +100,7 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   }
 
   return (
-    <>
+    <Flex flexDirection="column">
       <Text px={{ base: 4, md: 16 }} pb={8}>
         For the following schema{schemaList?.length > 1 ? <span>s</span> : null}:{' '}
         {schemaList?.map(schema => (
@@ -244,6 +244,6 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
           Continue to Step 3
         </Button>
       </Flex>
-    </>
+    </Flex>
   )
 }
