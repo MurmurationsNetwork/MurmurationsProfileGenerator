@@ -155,8 +155,12 @@ export default function AppShell({ children }) {
               <Link color="gray.500" isExternal href="https://murmurations.network">
                 Home Site
               </Link>
-              <Link color="gray.500">Terms &amp; Conditions</Link>
-              <Link color="gray.500">FAQs</Link>
+              <NextLink href="/terms">
+                <Link color="gray.500">Terms &amp; Conditions</Link>
+              </NextLink>
+              <NextLink href="/faq">
+                <Link color="gray.500">FAQ</Link>
+              </NextLink>
             </Stack>
             <Flex mx="auto" my={{ base: 2, md: 6 }}>
               <Link isExternal href="https://github.com/MurmurationsNetwork/MurmurationsProtocol">

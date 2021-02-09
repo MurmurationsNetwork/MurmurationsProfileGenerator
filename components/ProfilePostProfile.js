@@ -3,26 +3,44 @@ import {
   Button,
   Code,
   Flex,
+  Heading,
   HStack,
+  Image,
   Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
   Switch,
   Text,
   useClipboard,
-  useToast
+  useDisclosure,
+  useToast,
+  VStack
 } from '@chakra-ui/react'
 import cuid from 'cuid'
 import { sha256 } from 'js-sha256'
+import NextLink from 'next/link'
+import Router from 'next/router'
 import { useEffect, useState } from 'react'
 
 import { postNode } from '@/lib/api'
+import { useAuth } from '@/lib/auth'
 import { createProfile } from '@/lib/db'
 
-export default function ProfilePostProfile({ profile, setProfile, user }) {
+export default function ProfilePostProfile({ profile, setProfile }) {
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
   const [hosted, setHosted] = useState(false)
   const { hasCopied, onCopy } = useClipboard(JSON.stringify(profile.json, null, 2))
   const toast = useToast()
+  const { signinWithGithub, signinWithGoogle, user } = useAuth()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   let profileJson = profile.json
 
@@ -51,11 +69,28 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
 
         await createProfile(postingProfile.node_id, postingProfile)
         await postNode(postingProfile.url)
+
+        setProfile({})
+        Router.push('/dashboard')
       }
     }
 
     postNodeProfile()
   }, [posted])
+
+  function handleSignIn() {
+    onOpen()
+  }
+
+  function signinGithub() {
+    signinWithGithub()
+    onClose()
+  }
+
+  function signinGoogle() {
+    signinWithGoogle()
+    onClose()
+  }
 
   function handleToggle() {
     setHosted(!hosted)
@@ -95,6 +130,14 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
       })
     }
     setPosted(true)
+    toast({
+      title: 'Profile posted',
+      description: 'The profile has been sent to the index for validation and posting.',
+      status: 'success',
+      position: 'top',
+      duration: 5000,
+      isClosable: true
+    })
   }
 
   return (
@@ -161,99 +204,81 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
         bg="yellow.50"
         py={{ base: 8, md: 16 }}
         mx="auto"
-        // my={{ base: 8, md: 16 }}
         px={{ base: 4, md: 8, lg: 16 }}
         flexDirection="column"
-        // justifyContent="space-between"
         alignItems="center"
       >
         <Text mb={{ base: 4, md: 8 }}>
           Please select where you would like to host your profile:
         </Text>
-
-        {posted === true ? (
-          <Text>
-            The profile {!hosted ? `at <${profileUrl}>` : null} has been sent to the index for
-            validation and posting.
-          </Text>
-        ) : (
-          <>
-            {!profile.hostId && user && (
-              <HStack
-                bg="yellow.300"
-                padding={{ base: 4, md: 8 }}
-                spacing={{ base: 4, md: 16 }}
-                borderRadius="15px"
-              >
-                <Text fontWeight="600">My website</Text>
-                <Switch size="lg" colorScheme="yellow" onChange={handleToggle} />
-                <Text fontWeight="600">Here at MPG</Text>
-              </HStack>
-            )}
-            {!user && (
-              // TODO: Copy formatting from above
-              <>
-                <HStack spacing={{ base: 4, md: 16 }}>
-                  <Text as="span">Host it myself</Text>
-                  <Switch
-                    isDisabled={true}
-                    size="lg"
-                    colorScheme="yellow"
-                    onChange={handleToggle}
-                  />
-                  <Text as="span">Host it for me</Text>
-                </HStack>
-                <Text color="tomato">
-                  Sign in above to host your profile with us and/or manage your profiles after you
-                  create them
-                </Text>
-              </>
-            )}
-            {!hosted && (
-              <>
-                <Text>
-                  Or enter the URL (usually at your own website) where you will host your profile:
-                </Text>
-                <Input
-                  name="profileUrl"
-                  type="text"
-                  placeholder="example: https://your.site/subdirectory/profile.json"
-                  value={profileUrl}
-                  onChange={handleInput}
-                />
-              </>
-            )}
-            <Button onClick={handleSubmit}>Next</Button>
-          </>
-        )}
-      </Flex>
-      {/* {posted === true ? (
-        <Text>
-          The profile {!hosted ? `at <${profileUrl}>` : null} has been sent to the index for
-          validation and posting.
-        </Text>
-      ) : (
-        <div>
-          {!profile.hostId && user && (
+        <Stack spacing={8} isInline justifyContent="flex-start" alignItems="flex-start">
+          <Text fontWeight="600">My website</Text>
+          {user ? (
             <>
-              <Switch size="lg" onChange={handleToggle} />
-              <Text as="span">Host profile for me</Text>
+              <Switch size="lg" colorScheme="yellow" onChange={handleToggle} />
+              <Text fontWeight="600">Murmurations</Text>
             </>
-          )}
-          {!user && (
+          ) : (
             <>
-              <Switch isDisabled={true} />
-              <Text as="span">Host profile for me</Text>
-              <Text color="tomato">
-                Sign in above to host your profile with us and/or manage your profiles after you
-                create them
+              <Switch isDisabled={true} size="lg" colorScheme="yellow" onChange={handleToggle} />
+              <Text fontWeight="600" opacity="25%">
+                Murmurations
               </Text>
             </>
-          )} */}
-      {/* {!hosted && (
+          )}
+        </Stack>
+        {!user && (
+          <>
+            <Text
+              color="tomato"
+              align="center"
+              fontSize={{ base: '100%', md: '80%' }}
+              mt={4}
+              mb={2}
+            >
+              Want to host your profile with us and manage your profiles after you create them?
+            </Text>
+            <Button
+              variant="solid"
+              size="md"
+              fontSize={{ base: 'sm', md: 'md' }}
+              colorScheme="red"
+              borderRadius="25px"
+              height={{ base: 6, md: 8 }}
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={() => handleSignIn()}
+            >
+              Sign In
+            </Button>
+          </>
+        )}
+        <Flex
+          bg="yellow.300"
+          p={{ base: 4, md: 8 }}
+          m={{ base: 4, md: 8 }}
+          borderRadius="15px"
+          width={{ base: '100%', md: '80%' }}
+          flexDirection="column"
+        >
+          {hosted ? (
             <>
-              <Text>
-                Or enter the URL (usually at your own website) where you will host your profile:
+              <Heading textStyle="h3" mb={4}>
+                Host Your Profile Here
+              </Heading>
+            </>
+          ) : (
+            <>
+              <Heading textStyle="h3" mb={4}>
+                Host Your Own Profile
+              </Heading>
+              <Text mb={4}>
+                1. Copy the profile code above and save it to a file (e.g.,{' '}
+                <Code>profile.json</Code>).
+              </Text>
+              <Text mb={4}>
+                2. Upload the file to your website and tell us where we can view it:
               </Text>
               <Input
                 name="profileUrl"
@@ -261,11 +286,100 @@ export default function ProfilePostProfile({ profile, setProfile, user }) {
                 placeholder="example: https://your.site/subdirectory/profile.json"
                 value={profileUrl}
                 onChange={handleInput}
+                bgColor="white"
+                mb={8}
               />
             </>
           )}
-        </div>
-      )} */}
+          <Text>
+            By clicking the Post Profile button, you confirm that you have read and agree to our{' '}
+            <NextLink href="/terms">
+              <Link color="red.500" fontWeight="700">
+                Terms &amp; Conditions
+              </Link>
+            </NextLink>
+            .
+          </Text>
+          <Flex
+            width="100%"
+            ml="auto"
+            mr="auto"
+            mt={4}
+            flexDirection="column"
+            alignItems="flex-end"
+            maxWidth="65rem"
+          >
+            <Button
+              variant="solid"
+              size="md"
+              fontSize={{ base: 'md', md: 'lg' }}
+              colorScheme="red"
+              borderRadius="25px"
+              height={[6, 7, 8, 10]}
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={handleSubmit}
+            >
+              Post Profile
+            </Button>
+          </Flex>
+        </Flex>
+        {/*
+        S I G N  I N  M O D A L  -  S t a r t
+        */}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>
+              <Text>Sign in to manage your profiles</Text>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody my={8}>
+              <VStack spacing={8}>
+                <HStack spacing={8}>
+                  <Image height={8} src="github-yellow.svg" alt="GitHub" />
+                  <Button
+                    colorScheme="yellow"
+                    color="white"
+                    borderRadius="2xl"
+                    onClick={() => signinGithub()}
+                  >
+                    Sign in with GitHub
+                  </Button>
+                </HStack>
+                <HStack spacing={8}>
+                  <Image height={8} src="google-yellow.svg" alt="Google" />
+                  <Button
+                    colorScheme="yellow"
+                    color="white"
+                    borderRadius="2xl"
+                    onClick={() => signinGoogle()}
+                  >
+                    Sign in with Google
+                  </Button>
+                </HStack>
+                {/* TODO: Add Twitter Login */}
+                {/* <HStack spacing={8}>
+                  <Image height={8} src="twitter-yellow.svg" alt="Twitter" />
+                  <Button
+                    colorScheme="yellow"
+                    color="white"
+                    borderRadius="2xl"
+                    onClick={() => signinWithTwitter()}
+                  >
+                    Sign in with Twitter
+                  </Button>
+                </HStack> */}
+              </VStack>
+            </ModalBody>
+            <ModalFooter></ModalFooter>
+          </ModalContent>
+        </Modal>
+        {/*
+        S I G N  I N  M O D A L  -  E n d
+        */}
+      </Flex>
     </Flex>
   )
 }

@@ -1,15 +1,12 @@
 import { Flex, Heading, Image, Stack, Text } from '@chakra-ui/react'
-import Router from 'next/router'
 
 import AppShell from '@/components/AppShell'
 import ProfileCreateProfile from '@/components/ProfileCreateProfile'
 import ProfilePostProfile from '@/components/ProfilePostProfile'
 import ProfileSelectSchemas from '@/components/ProfileSelectSchemas'
-import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Profile() {
-  const { user } = useAuth()
   const { profile, setProfile } = useProfile()
 
   return (
@@ -79,9 +76,10 @@ export default function Profile() {
       ) : profile.step === 2 ? (
         <ProfileCreateProfile profile={profile} setProfile={setProfile} />
       ) : profile.step === 3 ? (
-        <ProfilePostProfile profile={profile} setProfile={setProfile} user={user} />
+        <ProfilePostProfile profile={profile} setProfile={setProfile} />
       ) : (
-        Router.push('/dashboard') && <Text>Redirecting...</Text>
+        // Router.push('/dashboard') && <Text>Redirecting...</Text>
+        (profile.step = 1)
       )}
     </AppShell>
   )
