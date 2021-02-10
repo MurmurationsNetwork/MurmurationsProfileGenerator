@@ -65,19 +65,6 @@ const customTheme = extendTheme({
       letterSpacing: '0.05em',
       fontSize: '100%'
     }
-  },
-  components: {
-    Accordion: {
-      baseStyle: {
-        fontWeight: 'bold'
-      },
-      variants: {
-        reddish: {
-          bg: 'red.400',
-          boxShadow: '0 0 2px 2px #efdfde'
-        }
-      }
-    }
   }
 })
 

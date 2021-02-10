@@ -4,6 +4,7 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Badge,
   Box,
   Button,
   Flex,
@@ -16,14 +17,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Table,
-  Thead,
   Tbody,
-  Tfoot,
-  Tr,
-  Th,
   Td,
-  TableCaption,
   Text,
+  Thead,
+  Tr,
   useBreakpointValue,
   useDisclosure,
   useToast
@@ -178,7 +176,8 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         variant="solid"
                         size="md"
                         fontSize="sm"
-                        colorScheme="red"
+                        colorScheme="yellow"
+                        color="white"
                         borderRadius="5px"
                         height={7}
                         _active={{
@@ -192,8 +191,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         variant="solid"
                         size="md"
                         fontSize="sm"
-                        colorScheme="yellow"
-                        color="white"
+                        colorScheme="red"
                         borderRadius="5px"
                         height={7}
                         _active={{
@@ -273,7 +271,8 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         variant="solid"
                         size="md"
                         fontSize="sm"
-                        colorScheme="red"
+                        colorScheme="yellow"
+                        color="white"
                         borderRadius="5px"
                         height={7}
                         _active={{
@@ -287,8 +286,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         variant="solid"
                         size="md"
                         fontSize="sm"
-                        colorScheme="yellow"
-                        color="white"
+                        colorScheme="red"
                         borderRadius="5px"
                         height={7}
                         _active={{
@@ -314,40 +312,76 @@ export default function DashboardProfiles({ profiles, setProfile }) {
             alignItems="center"
             width="100%"
           >
-            {/* <Table variant="unstyled">
-              <TableCaption>Imperial to metric conversion factors</TableCaption>
+            <Table variant="unstyled">
               <Thead>
-                <Tr>
-                  <Th>To convert</Th>
-                  <Th>into</Th>
-                  <Th isNumeric>multiply by</Th>
+                <Tr color="gray.500">
+                  <Td>URL</Td>
+                  <Td>Status</Td>
+                  <Td>Last Updated</Td>
+                  <Td>Schemas</Td>
                 </Tr>
               </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>millimetres (mm)</Td>
-                  <Td isNumeric>25.4</Td>
-                </Tr>
-                <Tr>
-                  <Td>feet</Td>
-                  <Td>centimetres (cm)</Td>
-                  <Td isNumeric>30.48</Td>
-                </Tr>
-                <Tr>
-                  <Td>yards</Td>
-                  <Td>metres (m)</Td>
-                  <Td isNumeric>0.91444</Td>
-                </Tr>
+              <Tbody fontSize="80%">
+                {profiles.map(profile => (
+                  <Tr key={profile.node_id}>
+                    <Td>
+                      <HStack width="25rem">
+                        <Text isTruncated>{profile.url}</Text>
+                        <Button
+                          variant="solid"
+                          size="md"
+                          fontSize="sm"
+                          colorScheme="red"
+                          borderRadius="5px"
+                          height={7}
+                          _active={{
+                            transform: 'scale(0.95)'
+                          }}
+                          onClick={() => handleDelete(profile.node_id, profile.hostId)}
+                        >
+                          Delete
+                        </Button>
+                      </HStack>
+                    </Td>
+                    <Td>
+                      <Badge colorScheme="yellow" variant="outline">
+                        {profile.status}
+                      </Badge>
+                    </Td>
+                    <Td>
+                      <HStack justifyItems="flex-end" spacing={0}>
+                        <Text>{new Date(profile.updated).toISOString().slice(0, 10)}</Text>
+                        <Button
+                          variant="solid"
+                          size="md"
+                          fontSize="sm"
+                          colorScheme="yellow"
+                          color="white"
+                          borderRadius="5px"
+                          height={7}
+                          _active={{
+                            transform: 'scale(0.95)'
+                          }}
+                          onClick={() => handleUpdate(profile.node_id)}
+                        >
+                          Update
+                        </Button>
+                      </HStack>
+                    </Td>
+                    <Td>
+                      {profile.schemaNames.map((schema, index) => {
+                        return (
+                          <Text as="span" key={schema}>
+                            {schema}
+                            {index === profile.schemaNames.length - 1 ? null : ', '}
+                          </Text>
+                        )
+                      })}
+                    </Td>
+                  </Tr>
+                ))}
               </Tbody>
-              <Tfoot>
-                <Tr>
-                  <Th>To convert</Th>
-                  <Th>into</Th>
-                  <Th isNumeric>multiply by</Th>
-                </Tr>
-              </Tfoot>
-            </Table> */}
+            </Table>
           </Flex>
         )
       ) : (
@@ -373,58 +407,58 @@ export default function DashboardProfiles({ profiles, setProfile }) {
           </Flex>
         </>
       )}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Profile</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              {selectedHostId
+                ? `Are you sure? Deleting your profile will remove your data from the
+              index and any networks that are using your profile.`
+                : `To remove your profile from the index, first delete the JSON file
+              from your website, then click on the Delete button below.`}
+            </Text>
+          </ModalBody>
+          <ModalFooter justifyContent="center">
+            <Button
+              variant="solid"
+              size="sm"
+              fontSize={{ base: 'md', md: 'lg' }}
+              colorScheme="red"
+              borderRadius="10px"
+              height={8}
+              my={4}
+              width="6rem"
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={deleteNodeProfile}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="solid"
+              size="sm"
+              fontSize={{ base: 'md', md: 'lg' }}
+              colorScheme="yellow"
+              color="white"
+              borderRadius="10px"
+              height={8}
+              ml={16}
+              my={4}
+              width="6rem"
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={cancelDelete}
+            >
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   )
 }
-
-/* 
-<Flex fontSize={{ base: '80%', md: '100%' }} flexDirection="column" maxWidth="100%">
-  {profiles.map(profile => (
-    <Text as="u" color="blue.500" key={profile.node_id} isTruncated>
-      <a href={profile.url} target="_blank" rel="noreferrer noopener">
-        {profile.url}
-      </a>
-    </Text>
-  ))}
-</Flex>
-*/
-
-/*
-{profiles.map(profile => (
-  <HStack key={profile.node_id}>
-    <Button onClick={() => handleUpdate(profile.node_id)}>Update</Button>
-    <Button onClick={() => handleDelete(profile.node_id, profile.hostId)}>Delete</Button>
-    <Text>
-      <strong>{profile.status}</strong> -- {new Date(profile.updated).toISOString()} --{' '}
-    </Text>
-    <Text as="u" color="blue.500">
-      <a href={profile.url} target="_blank" rel="noreferrer noopener">
-        {profile.url}
-      </a>
-    </Text>
-    {profile.schemaNames.map(schema => {
-      return <Text key={schema}>{schema}</Text>
-    })}
-  </HStack>
-))}
-<Modal isOpen={isOpen} onClose={onClose}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>Delete Profile</ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-      <Text>
-        {selectedHostId
-          ? `Are you sure? Deleting your profile will remove your data from the
-              index and any networks that are using your profile.`
-          : `To remove your profile from the index, please delete the JSON file
-              from your website. Then click on the Delete button below.`}
-      </Text>
-    </ModalBody>
-    <ModalFooter>
-      <Button onClick={deleteNodeProfile}>Delete</Button>
-      <Button onClick={cancelDelete}>Cancel</Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
-*/
