@@ -7,7 +7,7 @@ import ProfileSelectSchemas from '@/components/ProfileSelectSchemas'
 import { useProfile } from '@/lib/profile'
 
 export default function Profile() {
-  const { profile, setProfile } = useProfile()
+  const { profile, resetProfile, setProfile } = useProfile()
 
   return (
     <AppShell>
@@ -76,7 +76,7 @@ export default function Profile() {
       ) : profile.step === 2 ? (
         <ProfileCreateProfile profile={profile} setProfile={setProfile} />
       ) : profile.step === 3 ? (
-        <ProfilePostProfile profile={profile} setProfile={setProfile} />
+        <ProfilePostProfile profile={profile} setProfile={setProfile} resetProfile={resetProfile} />
       ) : (
         // Router.push('/dashboard') && <Text>Redirecting...</Text>
         (profile.step = 1)

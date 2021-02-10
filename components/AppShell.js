@@ -18,12 +18,20 @@ import {
   VStack
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import Router from 'next/router'
 
 import { useAuth } from '@/lib/auth'
+import { useProfile } from '@/lib/profile'
 
 export default function AppShell({ children }) {
   const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { resetProfile } = useProfile()
+
+  function handleNewProfile() {
+    resetProfile()
+    Router.push('/profile')
+  }
 
   function handleSignIn() {
     onOpen()
@@ -108,21 +116,20 @@ export default function AppShell({ children }) {
                 Sign In
               </Link>
             )}
-            <NextLink href="/profile">
-              <Button
-                variant="solid"
-                size="md"
-                fontSize={{ base: 'md', md: 'lg' }}
-                colorScheme="red"
-                borderRadius="25px"
-                height={[6, 7, 8, 10]}
-                _active={{
-                  transform: 'scale(0.95)'
-                }}
-              >
-                New Profile
-              </Button>
-            </NextLink>
+            <Button
+              variant="solid"
+              size="md"
+              fontSize={{ base: 'md', md: 'lg' }}
+              colorScheme="red"
+              borderRadius="25px"
+              height={[6, 7, 8, 10]}
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={() => handleNewProfile()}
+            >
+              New Profile
+            </Button>
           </Stack>
         </Flex>
         {/* 

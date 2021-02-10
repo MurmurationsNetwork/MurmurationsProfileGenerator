@@ -1,9 +1,17 @@
 import { Button, Flex, Heading, Image, Link, Stack, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import Router from 'next/router'
 
 import AppShell from '@/components/AppShell'
+import { useProfile } from '@/lib/profile'
 
 export default function Index() {
+  const { resetProfile } = useProfile()
+
+  function handleNewProfile() {
+    resetProfile()
+    Router.push('/profile')
+  }
   return (
     <AppShell>
       {/* 
@@ -12,7 +20,7 @@ export default function Index() {
       <Flex backgroundColor="white" px={[4, 8, 16, 0]}>
         <Flex
           mx="auto"
-          my={{ base: 10, md: 20 }}
+          my={{ base: 8, md: 16 }}
           width="100%"
           maxWidth="50rem"
           flexDirection="column"
@@ -122,24 +130,23 @@ export default function Index() {
               </Text>
             </Flex>
           </Flex>
-          <NextLink href="/profile">
-            <Button
-              variant="solid"
-              size="lg"
-              fontSize={['sm', 'md', 'lg', 'xl']}
-              colorScheme="red"
-              borderRadius="15px"
-              width="30%"
-              maxWidth="300px"
-              mt={{ base: 5, md: 12 }}
-              height={[8, 9, 10, 12]}
-              _active={{
-                transform: 'scale(0.95)'
-              }}
-            >
-              Get Started
-            </Button>
-          </NextLink>
+          <Button
+            variant="solid"
+            size="lg"
+            fontSize={['sm', 'md', 'lg', 'xl']}
+            colorScheme="red"
+            borderRadius="15px"
+            width="30%"
+            maxWidth="300px"
+            mt={{ base: 5, md: 12 }}
+            height={[8, 9, 10, 12]}
+            _active={{
+              transform: 'scale(0.95)'
+            }}
+            onClick={() => handleNewProfile()}
+          >
+            Get Started
+          </Button>
         </Flex>
       </Flex>
       {/* 

@@ -1,4 +1,4 @@
-import { Button, Heading, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import useSWR from 'swr'
 
@@ -9,7 +9,7 @@ import { useProfile } from '@/lib/profile'
 import fetcher from '@/utils/fb-fetcher'
 
 export default function Dashboard() {
-  const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
+  const { user } = useAuth()
   const { resetProfile, setProfile } = useProfile()
   const { data, error } = useSWR(user ? ['/api/profiles', user.token] : null, fetcher, {
     refreshInterval: 5000
@@ -19,10 +19,21 @@ export default function Dashboard() {
 
   return (
     <AppShell>
-      <div>
-        <NextLink href="/">
-          <Heading>Dashboard</Heading>
-        </NextLink>
+      <Flex backgroundColor="white" px={[4, 8, 16, 0]}>
+        <Flex
+          mx="auto"
+          mt={{ base: 8, md: 16 }}
+          mb={{ base: 2, md: 4 }}
+          width="100%"
+          maxWidth="50rem"
+          flexDirection="column"
+        >
+          <Heading as="h1" textAlign="center" textStyle="h1" mb={{ base: 4, md: 8 }}>
+            Dashboard
+          </Heading>
+        </Flex>
+      </Flex>
+      {/* <div>
         <NextLink href="/profile">
           <Button onClick={resetProfile}>Create Profile</Button>
         </NextLink>
@@ -41,7 +52,7 @@ export default function Dashboard() {
             <Button onClick={() => signinWithGoogle()}>Sign In - Google</Button>
           </>
         )}
-      </div>
+      </div> */}
     </AppShell>
   )
 }

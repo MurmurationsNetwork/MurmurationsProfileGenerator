@@ -33,7 +33,7 @@ import { postNode } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
 import { createProfile } from '@/lib/db'
 
-export default function ProfilePostProfile({ profile, setProfile }) {
+export default function ProfilePostProfile({ profile, resetProfile, setProfile }) {
   const [posted, setPosted] = useState(false)
   const [profileUrl, setProfileUrl] = useState('')
   const [hosted, setHosted] = useState(false)
@@ -70,7 +70,7 @@ export default function ProfilePostProfile({ profile, setProfile }) {
         await createProfile(postingProfile.node_id, postingProfile)
         await postNode(postingProfile.url)
 
-        setProfile({})
+        resetProfile()
         Router.push('/dashboard')
       }
     }
