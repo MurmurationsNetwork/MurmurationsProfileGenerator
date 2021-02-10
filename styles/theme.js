@@ -53,13 +53,30 @@ const customTheme = extendTheme({
       letterSpacing: '0.05em',
       fontSize: { base: '150%', md: '250%' }
     },
+    h2: {
+      fontSize: { base: '110%', md: '125%' },
+      fontWeight: 600
+    },
     h3: {
       letterSpacing: '0.05em',
-      fontSize: '135%'
+      fontSize: { base: '115%', md: '135%' }
     },
     h4: {
       letterSpacing: '0.05em',
       fontSize: '100%'
+    }
+  },
+  components: {
+    Accordion: {
+      baseStyle: {
+        fontWeight: 'bold'
+      },
+      variants: {
+        reddish: {
+          bg: 'red.400',
+          boxShadow: '0 0 2px 2px #efdfde'
+        }
+      }
     }
   }
 })
