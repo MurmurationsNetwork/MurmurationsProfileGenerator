@@ -305,8 +305,8 @@ export default function DashboardProfiles({ profiles, setProfile }) {
         ) : (
           <Flex
             bg="gray.50"
-            p={{ base: 4, md: 8 }}
-            my={{ base: 4, md: 8 }}
+            p={4}
+            my={8}
             borderRadius="15px"
             flexDirection="column"
             alignItems="center"
@@ -349,7 +349,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                       </Badge>
                     </Td>
                     <Td>
-                      <HStack justifyItems="flex-end" spacing={0}>
+                      <HStack justifyItems="flex-end" spacing={2}>
                         <Text>{new Date(profile.updated).toISOString().slice(0, 10)}</Text>
                         <Button
                           variant="solid"
