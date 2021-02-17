@@ -134,7 +134,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
         } else {
           toast({
             title: 'Error deleting profile',
-            description: 'There was an error when deleting the profile from the index.',
+            description: 'There was an error while deleting the profile from the index.',
             status: 'error',
             position: 'top',
             duration: 5000,
