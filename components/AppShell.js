@@ -162,10 +162,10 @@ export default function AppShell({ children }) {
               <Link color="gray.500" isExternal href="https://murmurations.network">
                 Home Site
               </Link>
-              <NextLink href="/terms">
-                <Link color="gray.500">Terms &amp; Conditions</Link>
+              <NextLink href="https://murmurations.network/principles/">
+                <Link color="gray.500">Principles</Link>
               </NextLink>
-              <NextLink href="/faq">
+              <NextLink href="https://murmurations.network/faq/">
                 <Link color="gray.500">FAQ</Link>
               </NextLink>
             </Stack>

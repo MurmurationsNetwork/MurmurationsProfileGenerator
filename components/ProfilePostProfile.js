@@ -293,9 +293,9 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
           )}
           <Text>
             By clicking the Post Profile button, you confirm that you have read and agree to our{' '}
-            <NextLink href="/terms">
+            <NextLink href="https://murmurations.network/principles/">
               <Link color="red.500" fontWeight="700">
-                Terms &amp; Conditions
+                Principles
               </Link>
             </NextLink>
             .
