@@ -235,7 +235,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
               mt={4}
               mb={2}
             >
-              Want to host your profile with us and manage your profiles after you create them?
+              Want to host and manage your profile with us after you create it?
             </Text>
             <Button
               variant="solid"
