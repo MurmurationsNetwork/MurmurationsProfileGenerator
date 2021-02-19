@@ -1,17 +1,17 @@
 import { Button, Checkbox, Flex, Heading, Link, Stack, Text, useToast } from '@chakra-ui/react'
 import { pickBy } from 'lodash'
-import { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
 
-function ListSchemas({ dispatch, schemaList, selectedSchemas }) {
+function ListSchemas({ dispatch, schemaList, state }) {
   return schemaList.map(schema => (
     <Stack spacing={2} isInline alignItems="flex-start" key={schema.name} mt={{ base: 4, md: 8 }}>
       <Checkbox
         mt={2}
         colorScheme="yellow"
-        defaultChecked={selectedSchemas[schema.name]}
+        isChecked={state[schema.name]}
         onChange={() => dispatch({ type: 'toggle', name: schema.name })}
       />
       <Flex flexDirection="column">
@@ -31,7 +31,8 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   let selectedSchemas = {}
   let schemaList = []
   const [state, dispatch] = useReducer(reducer, selectedSchemas)
-  // const { schemas } = profile
+  const [schemasSet, setSchemasSet] = useState(false)
+  const { schemas } = profile
   const { data, error } = useSWR(
     process.env.NEXT_PUBLIC_MURMURATIONS_LIBRARY_API_URL + '/schemas',
     fetcher
@@ -53,20 +54,19 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
 
     schemaList = initialList.reduce(removeOldVersions, [])
 
-    // TODO: Figure out how to only map over schemaList once so that going from step 2
-    // back to step 1 does not cause the reducer state to get stuck to the schemas
-    // listed in the profile state.
-
-    // schemaList.map(schema => {
-    //   if (schemas.find(s => s === schema.name)) {
-    //     selectedSchemas[schema.name] = true
-    //     if (!state[schema.name]) {
-    //       dispatch({ type: 'toggle', name: schema.name })
-    //     }
-    //   } else {
-    //     selectedSchemas[schema.name] = false
-    //   }
-    // })
+    if (!schemasSet) {
+      schemaList.map(schema => {
+        if (schemas.find(s => s === schema.name)) {
+          selectedSchemas[schema.name] = true
+          if (!state[schema.name]) {
+            dispatch({ type: 'toggle', name: schema.name })
+          }
+        } else {
+          selectedSchemas[schema.name] = false
+        }
+      })
+      setSchemasSet(true)
+    }
   }
 
   function reducer(state, action) {
@@ -113,11 +113,7 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
               You can use the same profile to add your data to multiple schemas at the same time.
             </Text>
             <Flex flexDirection="column">
-              <ListSchemas
-                dispatch={dispatch}
-                schemaList={schemaList}
-                selectedSchemas={selectedSchemas}
-              />
+              <ListSchemas dispatch={dispatch} schemaList={schemaList} state={state} />
             </Flex>
           </>
         ) : error ? (
