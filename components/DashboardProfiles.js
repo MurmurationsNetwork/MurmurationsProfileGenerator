@@ -209,7 +209,6 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                       {profile.status}
                     </Text>
                   </Text>
-                  {/* TODO: Convert date format to something more familiar */}
                   <Text>Last Updated: {new Date(profile.updated).toISOString()}</Text>
                   <Text>
                     Schema{profile.schemaNames.length > 1 ? 's' : null}:{' '}
@@ -252,7 +251,6 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                           {profile.status}
                         </Text>
                       </Text>
-                      {/* TODO: Convert date format to something more familiar */}
                       <Text>Last Updated: {new Date(profile.updated).toISOString()}</Text>
                       <Text>
                         Schema{profile.schemaNames.length > 1 ? 's' : null}:{' '}

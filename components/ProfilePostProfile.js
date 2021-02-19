@@ -25,7 +25,6 @@ import {
 } from '@chakra-ui/react'
 import cuid from 'cuid'
 import { sha256 } from 'js-sha256'
-import NextLink from 'next/link'
 import Router from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -236,7 +235,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
               mt={4}
               mb={2}
             >
-              Want to host your profile with us and manage your profiles after you create them?
+              Want to host and manage your profile with us after you create it?
             </Text>
             <Button
               variant="solid"
@@ -293,11 +292,9 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
           )}
           <Text>
             By clicking the Post Profile button, you confirm that you have read and agree to our{' '}
-            <NextLink href="/terms">
-              <Link color="red.500" fontWeight="700">
-                Terms &amp; Conditions
-              </Link>
-            </NextLink>
+            <Link color="gray.500" isExternal href="https://murmurations.network/principles/">
+              Principles
+            </Link>
             .
           </Text>
           <Flex
