@@ -1,4 +1,4 @@
-# Murmurations Profile Generator
+# Murmurations Profile Generator v1
 
 ## Firebase Cloud Firestore Security Rules
 
