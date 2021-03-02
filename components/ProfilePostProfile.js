@@ -214,7 +214,13 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
           <Text fontWeight="600">My website</Text>
           {user ? (
             <>
-              <Switch size="lg" colorScheme="yellow" onChange={handleToggle} />
+              <Switch
+                size="lg"
+                colorScheme="yellow"
+                isChecked={profile.hostId}
+                isDisabled={profile.hostId}
+                onChange={handleToggle}
+              />
               <Text fontWeight="600">Murmurations</Text>
             </>
           ) : (

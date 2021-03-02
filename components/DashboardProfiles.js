@@ -53,11 +53,11 @@ export default function DashboardProfiles({ profiles, setProfile }) {
     Router.push('/profile')
   }
 
-  function handleUpdate(node_id) {
+  function handleUpdate(node_id, hostId) {
     fetch(`/api/${node_id}`)
       .then(response => response.json())
       .then(data => {
-        setProfile({ step: 1, ...data })
+        setProfile({ step: 1, ...data, hostId })
         Router.push('/profile')
       })
   }
@@ -183,7 +183,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         _active={{
                           transform: 'scale(0.95)'
                         }}
-                        onClick={() => handleUpdate(profile.node_id)}
+                        onClick={() => handleUpdate(profile.node_id, profile.hostId)}
                       >
                         Update
                       </Button>
@@ -276,7 +276,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                         _active={{
                           transform: 'scale(0.95)'
                         }}
-                        onClick={() => handleUpdate(profile.node_id)}
+                        onClick={() => handleUpdate(profile.node_id, profile.hostId)}
                       >
                         Update
                       </Button>
@@ -360,7 +360,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                           _active={{
                             transform: 'scale(0.95)'
                           }}
-                          onClick={() => handleUpdate(profile.node_id)}
+                          onClick={() => handleUpdate(profile.node_id, profile.hostId)}
                         >
                           Update
                         </Button>
