@@ -78,6 +78,7 @@ export default function Dashboard() {
           {data ? (
             <DashboardProfiles profiles={data} setProfile={setProfile} />
           ) : (
+            /* TODO - add error handling if profiles can't be retrieved */
             <Text>Loading...</Text>
           )}
         </Flex>

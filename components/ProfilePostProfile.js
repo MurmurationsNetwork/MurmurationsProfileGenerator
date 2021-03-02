@@ -65,7 +65,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
         if (!postingProfile.node_id) {
           postingProfile.node_id = sha256(postingProfile.url)
         }
-
+        // TODO - check that post to index worked before posting to Firebase
         await createProfile(postingProfile.node_id, postingProfile)
         await postNode(postingProfile.url)
 
