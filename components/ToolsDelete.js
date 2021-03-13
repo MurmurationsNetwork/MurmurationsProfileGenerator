@@ -1,10 +1,59 @@
-import { Box, Button, Code, Flex, Input, Text } from '@chakra-ui/react'
+import { Box, Button, Code, Flex, Input, Text, useToast } from '@chakra-ui/react'
+import { sha256 } from 'js-sha256'
+import { useState } from 'react'
+
+import { deleteNode } from '@/lib/api'
 
 export default function ToolsCreate() {
-  const delResponse = `{
-  "message": "Profile still exists at https://node.site/optional-subdirectory/node-profile.json for node_id a55964aeaae9625dc2b8dbdb1c4ce0ed1e658483f44cf2be1a6479fe5e144d38",
-  "status": 400
-}`
+  const [profile, setProfile] = useState('')
+  const [response, setResponse] = useState({})
+  const toast = useToast()
+
+  function handleInput(e) {
+    setProfile(e.target.value)
+  }
+
+  function handleDelete(e) {
+    e.preventDefault()
+    if (profile.length < 1) {
+      toast({
+        title: 'Error deleting profile',
+        description: 'You need to enter a profile URL to indicate where your profile was located.',
+        status: 'error',
+        position: 'top',
+        duration: 5000,
+        isClosable: true
+      })
+      return
+    }
+    const valid = /^(http|https):\/\/[^ "]+$/.test(profile)
+    if (!valid) {
+      toast({
+        title: 'Error deleting profile',
+        description: 'You need to enter a valid profile URL starting with http or https.',
+        status: 'error',
+        position: 'top',
+        duration: 5000,
+        isClosable: true
+      })
+      return
+    }
+    deleteNode(sha256(profile))
+      .then(res => {
+        if (res.status === 200) {
+          toast({
+            title: 'Profile deleted',
+            description: 'The profile has been deleted from the index.',
+            status: 'success',
+            position: 'top',
+            duration: 5000,
+            isClosable: true
+          })
+        }
+        setResponse(res)
+      })
+      .catch(err => console.err(err))
+  }
 
   return (
     <Flex
@@ -19,16 +68,16 @@ export default function ToolsCreate() {
       borderRadius="5px"
     >
       <Text>
-        First, delete the profile from your website so it is no longer accessible (your server
-        should return a <Text as="code">404 Not Found</Text> error).
+        Delete the profile from your website so it is no longer accessible (your server should
+        return a <Text as="code">404 Not Found</Text> error). Then enter the URL where your profile
+        was located and click Delete:
       </Text>
-      <Text mt={4}>Now enter the URL where your profile was located and click Delete:</Text>
       <Input
         name="profileUrl"
         type="text"
         placeholder="https://your.site/directory/profile.json"
-        value="" //{profileUrl}
-        onChange={() => {}} //{handleInput}
+        value={profile}
+        onChange={handleInput}
         bgColor="white"
         mt={2}
       />
@@ -52,23 +101,31 @@ export default function ToolsCreate() {
           _active={{
             transform: 'scale(0.95)'
           }}
-          onClick={() => {}} //{handleSubmit}
+          onClick={handleDelete}
         >
           Delete
         </Button>
       </Flex>
-      <Box>
-        <Code
-          as="pre"
-          variant="subtle"
-          width="100%"
-          whiteSpace="pre-wrap"
-          p={4}
-          borderRadius="10px"
-        >
-          {delResponse /*JSON.stringify(profile.json, null, 2) */}
-        </Code>
-      </Box>
+      {response.status ? (
+        response.status === 200 ? (
+          <Text as="b" color="green.500">
+            The profile has been removed from the index.
+          </Text>
+        ) : (
+          <Box>
+            <Code
+              as="pre"
+              variant="subtle"
+              width="100%"
+              whiteSpace="pre-wrap"
+              p={4}
+              borderRadius="10px"
+            >
+              {JSON.stringify(response, null, 2)}
+            </Code>
+          </Box>
+        )
+      ) : null}
     </Flex>
   )
 }

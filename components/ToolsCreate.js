@@ -26,7 +26,7 @@ export default function ToolsCreate() {
       })
       return
     }
-    const valid = /^(ftp|http|https):\/\/[^ "]+$/.test(profile)
+    const valid = /^(http|https):\/\/[^ "]+$/.test(profile)
     if (!valid) {
       toast({
         title: 'Error posting profile',
@@ -74,7 +74,10 @@ export default function ToolsCreate() {
       bg="gray.50"
       borderRadius="5px"
     >
-      <Text>Enter the URL of your profile and click Post:</Text>
+      <Text>
+        Post your new or updated profile on your website. Then enter the URL of your profile and
+        click Post:
+      </Text>
       <Input
         name="profileUrl"
         type="text"
