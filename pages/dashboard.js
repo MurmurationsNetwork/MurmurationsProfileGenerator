@@ -77,6 +77,11 @@ export default function Dashboard() {
           </Text>
           {data ? (
             <DashboardProfiles profiles={data} setProfile={setProfile} />
+          ) : error ? (
+            <>
+              <Text>There was an error contacting the server.</Text>
+              <Text>Please try again later.</Text>
+            </>
           ) : (
             <Text>Loading...</Text>
           )}

@@ -77,6 +77,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
       )
         .then(mutate('/api/profiles', deleteProfile(selectedNodeId)))
         .then(() => {
+          // TODO - handle index being down
           return deleteNode(selectedNodeId)
         })
         .then(response => {
@@ -102,6 +103,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
         })
     }
     if (!selectedHostId) {
+      // TODO - handle index being down
       deleteNode(selectedNodeId).then(response => {
         if (response.status === 200) {
           toast({
