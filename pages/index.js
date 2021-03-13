@@ -12,6 +12,11 @@ export default function Index() {
     resetProfile()
     Router.push('/profile')
   }
+
+  function handleProTools() {
+    Router.push('/protools')
+  }
+
   return (
     <AppShell>
       {/* 
@@ -194,8 +199,33 @@ export default function Index() {
           </Heading>
           <Text>
             There is no need to sign in to generate a profile if you choose to host it on your own
-            website.
+            website. Use our <Text as="b">Pro Tools</Text> to add your profile to the index and
+            update the index when you make changes.
           </Text>
+          <Flex
+            alignItems="center"
+            width={{ base: '100%' }}
+            minWidth="200px"
+            flexDirection="column"
+          >
+            <Button
+              variant="solid"
+              size="lg"
+              fontSize={['sm', 'md', 'lg', 'xl']}
+              colorScheme="red"
+              borderRadius="15px"
+              width="30%"
+              maxWidth="300px"
+              mt={{ base: 5, md: 12 }}
+              height={[8, 9, 10, 12]}
+              _active={{
+                transform: 'scale(0.95)'
+              }}
+              onClick={() => handleProTools()}
+            >
+              Pro Tools
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
       {/* 
