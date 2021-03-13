@@ -46,7 +46,19 @@ export default function ToolsCreate() {
   function handleStatus(e) {
     e.preventDefault()
     getNodeStatus(nodeId)
-      .then(res => setResponse(res.data))
+      .then(res => {
+        setResponse(res.data)
+        if (res.data.status === 'posted') {
+          toast({
+            title: 'Profile posted',
+            description: 'The profile has been posted to the index.',
+            status: 'success',
+            position: 'top',
+            duration: 5000,
+            isClosable: true
+          })
+        }
+      })
       .catch(err => console.err(err))
   }
 
@@ -109,7 +121,7 @@ export default function ToolsCreate() {
           <Text as="code" mt={2}>
             {nodeId}
           </Text>
-          <Text mt={4}>Click Status to see your profile&apos;s status in the Index:</Text>
+          <Text mt={4}>Click Status to see your profile&apos;s status in the index:</Text>
           <Flex
             width="100%"
             ml="auto"
