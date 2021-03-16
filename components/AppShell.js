@@ -83,16 +83,29 @@ export default function AppShell({ children }) {
             </NextLink>
           </Flex>
           <Stack spacing={[8, 12, 16, 24]} isInline alignItems="center" mb={{ base: 2, md: 0 }}>
-            <NextLink href="/dashboard">
-              <Link
-                color="gray.500"
-                _active={{
-                  transform: 'scale(0.95)'
-                }}
-              >
-                Dashboard
-              </Link>
-            </NextLink>
+            {user ? (
+              <NextLink href="/dashboard">
+                <Link
+                  color="gray.500"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                >
+                  Dashboard
+                </Link>
+              </NextLink>
+            ) : (
+              <NextLink href="/protools">
+                <Link
+                  color="gray.500"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                >
+                  Pro Tools
+                </Link>
+              </NextLink>
+            )}
             {user ? (
               // eslint-disable-next-line
               <Link

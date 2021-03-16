@@ -3,10 +3,12 @@ import NextLink from 'next/link'
 import Router from 'next/router'
 
 import AppShell from '@/components/AppShell'
+import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Index() {
   const { resetProfile } = useProfile()
+  const { user } = useAuth()
 
   function handleNewProfile() {
     resetProfile()
@@ -102,7 +104,7 @@ export default function Index() {
                 src="step2.svg"
               />
               <Text textAlign="center" fontSize={'110%'} fontWeight={'600'} color="yellow.600">
-                Complete Form
+                Add Details
               </Text>
               <Text mt={{ base: 3, md: 6 }} fontSize={{ base: '90%', md: '80%' }}>
                 Fill in the information requested by the schemas you selected in order to complete
@@ -150,7 +152,7 @@ export default function Index() {
             }}
             onClick={() => handleNewProfile()}
           >
-            Get Started
+            Create a Profile
           </Button>
         </Flex>
       </Flex>
@@ -169,12 +171,21 @@ export default function Index() {
           maxWidth="780px"
           flexDirection="column"
         >
+          <Heading as="h3" textStyle="h3" mb={{ base: 3, md: 6 }}>
+            Sign in for a complete profile management experience
+          </Heading>
           <Text>
-            If you sign in, you can edit or delete your profile at any time, and we will even host
-            it for you. Plus you can create as many profiles as you need and manage them from your{' '}
-            <NextLink href="/dashboard">
-              <Link color="red.500">dashboard</Link>
-            </NextLink>
+            Sign in to edit or delete your profile at any time, and we will even host it for you.
+            Plus you can create as many profiles as you need and manage them from your{' '}
+            {user ? (
+              <NextLink href="/dashboard">
+                <Link color="red.500">Dashboard</Link>
+              </NextLink>
+            ) : (
+              <>
+                <Text as="b">Dashboard</Text>
+              </>
+            )}
             .
           </Text>
         </Flex>
@@ -198,34 +209,36 @@ export default function Index() {
             Optional login—we respect your privacy
           </Heading>
           <Text>
-            There is no need to sign in to generate a profile if you choose to host it on your own
-            website. Use our <Text as="b">Pro Tools</Text> to add your profile to the index and
-            update the index when you make changes.
+            There is no need to sign in if you choose to host it on your own website. Use our{' '}
+            <Text as="b">Pro Tools</Text> to add your profile to the index and update the index when
+            you make changes.
           </Text>
-          <Flex
-            alignItems="center"
-            width={{ base: '100%' }}
-            minWidth="200px"
-            flexDirection="column"
-          >
-            <Button
-              variant="solid"
-              size="lg"
-              fontSize={['sm', 'md', 'lg', 'xl']}
-              colorScheme="red"
-              borderRadius="15px"
-              width="30%"
-              maxWidth="300px"
-              mt={{ base: 5, md: 12 }}
-              height={[8, 9, 10, 12]}
-              _active={{
-                transform: 'scale(0.95)'
-              }}
-              onClick={() => handleProTools()}
+          {user ? null : (
+            <Flex
+              alignItems="center"
+              width={{ base: '100%' }}
+              minWidth="200px"
+              flexDirection="column"
             >
-              Pro Tools
-            </Button>
-          </Flex>
+              <Button
+                variant="solid"
+                size="lg"
+                fontSize={['sm', 'md', 'lg', 'xl']}
+                colorScheme="red"
+                borderRadius="15px"
+                width="30%"
+                maxWidth="300px"
+                mt={{ base: 5, md: 12 }}
+                height={[8, 9, 10, 12]}
+                _active={{
+                  transform: 'scale(0.95)'
+                }}
+                onClick={() => handleProTools()}
+              >
+                Pro Tools
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Flex>
       {/* 

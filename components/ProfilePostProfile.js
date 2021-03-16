@@ -241,7 +241,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
               mt={4}
               mb={2}
             >
-              Want to host and manage your profile with us after you create it?
+              Sign in first if you want to manage (and even host) your profile(s) with us here.
             </Text>
             <Button
               variant="solid"
@@ -272,6 +272,17 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
               <Heading textStyle="h3" mb={4}>
                 Host Your Profile Here
               </Heading>
+              <Text mb={4}>By clicking the Post Profile button, you confirm that: </Text>
+              <Text>
+                1) You are happy for Murmurations to host and share your profile on the web and to
+                contact you about schema updates
+              </Text>
+              <Text>
+                2) You have read and agree to our{' '}
+                <Link color="gray.500" isExternal href="https://murmurations.network/principles/">
+                  Principles
+                </Link>
+              </Text>
             </>
           ) : (
             <>
@@ -279,11 +290,11 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
                 Host Your Own Profile
               </Heading>
               <Text mb={4}>
-                1. Copy the profile code above and save it to a file (e.g.,{' '}
+                1) Copy the profile code above and save it to a file (e.g.,{' '}
                 <Code>profile.json</Code>).
               </Text>
               <Text mb={4}>
-                2. Upload the file to your website and tell us where we can view it:
+                2) Upload the file to your website and tell us where we can view it:
               </Text>
               <Input
                 name="profileUrl"
@@ -294,15 +305,15 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
                 bgColor="white"
                 mb={8}
               />
+              <Text>
+                By clicking the Post Profile button, you confirm that you have read and agree to our{' '}
+                <Link color="gray.500" isExternal href="https://murmurations.network/principles/">
+                  Principles
+                </Link>
+                .
+              </Text>
             </>
           )}
-          <Text>
-            By clicking the Post Profile button, you confirm that you have read and agree to our{' '}
-            <Link color="gray.500" isExternal href="https://murmurations.network/principles/">
-              Principles
-            </Link>
-            .
-          </Text>
           <Flex
             width="100%"
             ml="auto"
