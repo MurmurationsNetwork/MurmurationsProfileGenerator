@@ -8,17 +8,14 @@ import {
   useBreakpointValue,
   useToast
 } from '@chakra-ui/react'
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
-import { JsonForms } from '@jsonforms/react'
-import { isEqual, merge, union } from 'lodash'
+import Form from '@rjsf/material-ui'
+import { merge, union } from 'lodash'
 import { useEffect, useState } from 'react'
 
 import Geolocation from '@/components/Geolocation'
 import parser from '@/utils/parser'
 
 export default function ProfileCreateProfile({ profile, setProfile }) {
-  const [validationErrors, setValidationErrors] = useState([])
-  const [valid, setValid] = useState(true)
   const [formData, setFormData] = useState(profile.json)
   const [allSchemas, setAllSchemas] = useState(mergedSchemas)
   const [schemaList, setSchemaList] = useState([])
@@ -38,7 +35,6 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
   let lg, mr
   formHasGeolocation ? ((lg = 2), (mr = 4)) : ((lg = 3), (mr = 16))
 
-  useEffect(() => (validationErrors.length !== 0 ? setValid(false) : setValid(true)))
   useEffect(() => {
     selectedSchemas.forEach(schema => {
       let schemaUrl = `${process.env.NEXT_PUBLIC_MURMURATIONS_CDN_URL}/schemas/${schema}.json`
@@ -60,6 +56,8 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
           mergedSchemas.required = requiredProperties
           // Remove `linked_schemas` so user does not have to type them in
           delete mergedSchemas.properties.linked_schemas
+          delete mergedSchemas.title
+          delete mergedSchemas.description
           mergedSchemas.properties.geolocation ? setFormHasGeolocation(true) : null
           setAllSchemas(mergedSchemas)
         })
@@ -77,21 +75,20 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
     setFormData({})
   }
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (!valid) {
-      toast({
-        title: 'Error completing form',
-        description:
-          'Please check any error messages in the form to ensure you have completed all fields and that they meet all of their requirements.',
-        status: 'error',
-        position: 'top',
-        duration: 7500,
-        isClosable: true
-      })
-      return
-    }
-    if (valid) {
+  function handleError() {
+    toast({
+      title: 'Error completing form',
+      description:
+        'Please check any error messages at the top of the form to ensure you have completed all fields and that they meet all of their requirements.',
+      status: 'error',
+      position: 'top',
+      duration: 7500,
+      isClosable: true
+    })
+  }
+
+  function handleSubmit({ formData }) {
+    if (formData) {
       formData.linked_schemas = profile.schemas
       setProfile({ ...profile, step: 3, json: formData, schemaNames: schemaList })
     } else {
@@ -170,80 +167,84 @@ export default function ProfileCreateProfile({ profile, setProfile }) {
           borderRadius="5px"
           ml={{ base: 4, md: 8, lg: 16 }}
           mr={{ base: 4, md: 8, lg: mr }}
+          mb={{ base: 4, md: 8, lg: 16 }}
           p={4}
         >
-          <JsonForms
-            schema={allSchemas}
-            renderers={materialRenderers}
-            cells={materialCells}
-            data={formData}
-            onChange={({ errors, data }) => {
-              if (!isEqual(errors, validationErrors)) {
-                setValidationErrors(errors)
-              }
-              setFormData(data)
-            }}
-          />
+          {allSchemas ? (
+            <Form
+              schema={allSchemas}
+              formData={formData}
+              onChange={({ formData }) => {
+                setFormData(formData)
+              }}
+              onSubmit={handleSubmit}
+              onError={handleError}
+            >
+              <Flex
+                width="100%"
+                mx="auto"
+                // my={{ base: 8, md: 16 }}
+                // px={{ base: 4, md: 8, lg: 16 }}
+                flexDirection={{ base: 'column', md: 'row' }}
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Button
+                  as="button"
+                  variant="outline"
+                  size="md"
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  colorScheme="red"
+                  borderRadius="25px"
+                  height={[6, 7, 8, 10]}
+                  my={{ base: 2, md: 0 }}
+                  minWidth="12rem"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                  onClick={() => setProfile({ ...profile, step: 1, json: formData })}
+                >
+                  Back to Step 1
+                </Button>
+                <Button
+                  as="button"
+                  variant="outline"
+                  size="md"
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  colorScheme="yellow"
+                  borderRadius="25px"
+                  height={[6, 7, 8, 10]}
+                  my={{ base: 2, md: 0 }}
+                  minWidth="12rem"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                  onClick={resetForm}
+                >
+                  Clear Form
+                </Button>
+                <Button
+                  as="button"
+                  variant="solid"
+                  size="md"
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  colorScheme="red"
+                  borderRadius="25px"
+                  height={[6, 7, 8, 10]}
+                  my={{ base: 2, md: 0 }}
+                  minWidth="12rem"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                  onClick={handleSubmit}
+                >
+                  Continue to Step 3
+                </Button>
+              </Flex>
+            </Form>
+          ) : null}
         </GridItem>
       </Grid>
-      <Flex
-        width="100%"
-        mx="auto"
-        my={{ base: 8, md: 16 }}
-        px={{ base: 4, md: 8, lg: 16 }}
-        flexDirection={{ base: 'column', md: 'row' }}
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Button
-          variant="outline"
-          size="md"
-          fontSize={{ base: 'md', md: 'lg' }}
-          colorScheme="red"
-          borderRadius="25px"
-          height={[6, 7, 8, 10]}
-          my={{ base: 2, md: 0 }}
-          minWidth="12rem"
-          _active={{
-            transform: 'scale(0.95)'
-          }}
-          onClick={() => setProfile({ ...profile, step: 1, json: formData })}
-        >
-          Back to Step 1
-        </Button>
-        <Button
-          variant="outline"
-          size="md"
-          fontSize={{ base: 'md', md: 'lg' }}
-          colorScheme="yellow"
-          borderRadius="25px"
-          height={[6, 7, 8, 10]}
-          my={{ base: 2, md: 0 }}
-          minWidth="12rem"
-          _active={{
-            transform: 'scale(0.95)'
-          }}
-          onClick={resetForm}
-        >
-          Clear Form
-        </Button>
-        <Button
-          variant="solid"
-          size="md"
-          fontSize={{ base: 'md', md: 'lg' }}
-          colorScheme="red"
-          borderRadius="25px"
-          height={[6, 7, 8, 10]}
-          my={{ base: 2, md: 0 }}
-          minWidth="12rem"
-          _active={{
-            transform: 'scale(0.95)'
-          }}
-          onClick={handleSubmit}
-        >
-          Continue to Step 3
-        </Button>
-      </Flex>
     </Flex>
   )
 }
