@@ -143,7 +143,7 @@ export default function Index() {
             fontSize={['sm', 'md', 'lg', 'xl']}
             colorScheme="red"
             borderRadius="15px"
-            width="30%"
+            width={{ base: '50%', md: '40%', lg: '30%' }}
             maxWidth="300px"
             mt={{ base: 5, md: 12 }}
             height={[8, 9, 10, 12]}
