@@ -168,73 +168,65 @@ export default function AppShell({ children }) {
                 variant="outline"
               />
               <MenuList>
-                <MenuItem>
-                  <Link color="gray.500" href={process.env.NEXT_PUBLIC_MURMURATIONS_AGGREGATOR_URL}>
-                    Map
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  {user ? (
-                    <NextLink href="/dashboard">
-                      <Link
-                        color="gray.500"
-                        _active={{
-                          transform: 'scale(0.95)'
-                        }}
-                      >
-                        Dashboard
-                      </Link>
-                    </NextLink>
-                  ) : (
-                    <NextLink href="/protools">
-                      <Link
-                        color="gray.500"
-                        _active={{
-                          transform: 'scale(0.95)'
-                        }}
-                      >
-                        Pro Tools
-                      </Link>
-                    </NextLink>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {user ? (
-                    // eslint-disable-next-line
+                <Link color="gray.500" href={process.env.NEXT_PUBLIC_MURMURATIONS_AGGREGATOR_URL}>
+                  <MenuItem>Map</MenuItem>
+                </Link>
+                {user ? (
+                  <NextLink href="/dashboard">
                     <Link
                       color="gray.500"
                       _active={{
                         transform: 'scale(0.95)'
                       }}
-                      onClick={() => signout()}
                     >
-                      Sign Out
+                      <MenuItem>Dashboard</MenuItem>
                     </Link>
-                  ) : (
-                    // eslint-disable-next-line
+                  </NextLink>
+                ) : (
+                  <NextLink href="/protools">
                     <Link
                       color="gray.500"
                       _active={{
                         transform: 'scale(0.95)'
                       }}
-                      onClick={() => handleSignIn()}
                     >
-                      Sign In
+                      <MenuItem>Pro Tools</MenuItem>
                     </Link>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {/* eslint-disable-next-line */}
+                  </NextLink>
+                )}
+                {user ? (
+                  // eslint-disable-next-line
                   <Link
                     color="gray.500"
                     _active={{
                       transform: 'scale(0.95)'
                     }}
-                    onClick={() => handleNewProfile()}
+                    onClick={() => signout()}
                   >
-                    New Profile
+                    <MenuItem>Sign Out</MenuItem>
                   </Link>
-                </MenuItem>
+                ) : (
+                  // eslint-disable-next-line
+                  <Link
+                    color="gray.500"
+                    _active={{
+                      transform: 'scale(0.95)'
+                    }}
+                    onClick={() => handleSignIn()}
+                  >
+                    <MenuItem>Sign In</MenuItem>
+                  </Link>
+                )}
+                {/* eslint-disable-next-line */}
+                <Link
+                  color="gray.500"
+                  _active={{
+                    transform: 'scale(0.95)'
+                  }}
+                  onClick={() => handleNewProfile()}
+                >
+                  <MenuItem>New Profile</MenuItem>
+                </Link>
               </MenuList>
             </Menu>
           )}
