@@ -30,6 +30,7 @@
   "homepage": "https://github.com/MurmurationsNetwork/MurmurationsProfileGenerator#readme",
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.6",
+    "@chakra-ui/icons": "^1.0.7",
     "@chakra-ui/react": "^1.0.3",
     "@emotion/react": "^11.1.1",
     "@emotion/styled": "^11.0.0",

@@ -44,8 +44,7 @@ export default function DashboardProfiles({ profiles, setProfile }) {
   const { resetProfile } = useProfile()
   const screenSize = useBreakpointValue({
     base: 'mobile',
-    sm: 'tablet',
-    lg: 'desktop'
+    sm: 'tablet'
   })
 
   function handleNewProfile() {
