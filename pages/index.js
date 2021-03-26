@@ -39,8 +39,12 @@ export default function Index() {
             Profile Generator
           </Text>
           <Text as="h3">
-            Include your world-changing project or organisation in the Murmurations Index. Create
-            your profile in three quick steps:
+            Include your world-changing project or organisation in the Murmurations Index. Your
+            profile will appear in{' '}
+            <Link color="red.500" isExternal href="https://aggregator.murmurations.network">
+              the demo aggregator
+            </Link>
+            . Create your profile in three quick steps:
           </Text>
         </Flex>
       </Flex>

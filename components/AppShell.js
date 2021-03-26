@@ -1,10 +1,16 @@
+import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Button,
   Flex,
   Heading,
   HStack,
+  IconButton,
   Image,
   Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,6 +20,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useBreakpointValue,
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
@@ -27,7 +34,9 @@ export default function AppShell({ children }) {
   const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { resetProfile } = useProfile()
-
+  const screenSize = useBreakpointValue({
+    lg: 'desktop'
+  })
   function handleNewProfile() {
     resetProfile()
     Router.push('/profile')
@@ -61,15 +70,15 @@ export default function AppShell({ children }) {
         N A V B A R  -  S t a r t
         */}
         <Flex
-          display={{ base: 'grid', md: 'flex' }}
-          flexDirection={{ base: 'column', md: 'row' }}
+          display="flex"
+          flexDirection="row"
           backgroundColor="gray.50"
-          justifyContent="space-around"
+          justifyContent={{ base: 'space-between', lg: 'space-around' }}
           alignItems="center"
-          px={{ base: 2, md: 16 }}
+          px={{ base: 8, md: 16 }}
           py={{ base: 1, md: 4 }}
         >
-          <Flex mx={{ base: 'auto', md: 0 }} my={{ base: 4, md: 0 }}>
+          <Flex mx={0} my={{ base: 4, md: 0 }}>
             <NextLink href="/">
               <Image
                 height={['38px', '57px', '77px']}
@@ -82,68 +91,152 @@ export default function AppShell({ children }) {
               />
             </NextLink>
           </Flex>
-          <Stack spacing={[8, 12, 16, 24]} isInline alignItems="center" mb={{ base: 2, md: 0 }}>
-            {user ? (
-              <NextLink href="/dashboard">
+          {screenSize === 'desktop' ? (
+            <Stack spacing={[8, 12, 16, 24]} isInline alignItems="center" mb={{ base: 2, md: 0 }}>
+              <Link color="gray.500" href="https://aggregator.murmurations.network">
+                Map
+              </Link>
+              {user ? (
+                <NextLink href="/dashboard">
+                  <Link
+                    color="gray.500"
+                    _active={{
+                      transform: 'scale(0.95)'
+                    }}
+                  >
+                    Dashboard
+                  </Link>
+                </NextLink>
+              ) : (
+                <NextLink href="/protools">
+                  <Link
+                    color="gray.500"
+                    _active={{
+                      transform: 'scale(0.95)'
+                    }}
+                  >
+                    Pro Tools
+                  </Link>
+                </NextLink>
+              )}
+              {user ? (
+                // eslint-disable-next-line
                 <Link
                   color="gray.500"
                   _active={{
                     transform: 'scale(0.95)'
                   }}
+                  onClick={() => signout()}
                 >
-                  Dashboard
+                  Sign Out
                 </Link>
-              </NextLink>
-            ) : (
-              <NextLink href="/protools">
+              ) : (
+                // eslint-disable-next-line
                 <Link
                   color="gray.500"
                   _active={{
                     transform: 'scale(0.95)'
                   }}
+                  onClick={() => handleSignIn()}
                 >
-                  Pro Tools
+                  Sign In
                 </Link>
-              </NextLink>
-            )}
-            {user ? (
-              // eslint-disable-next-line
-              <Link
-                color="gray.500"
+              )}
+              <Button
+                variant="solid"
+                size="md"
+                fontSize={{ base: 'md', md: 'lg' }}
+                colorScheme="red"
+                borderRadius="25px"
+                height={[6, 7, 8, 10]}
                 _active={{
                   transform: 'scale(0.95)'
                 }}
-                onClick={() => signout()}
+                onClick={() => handleNewProfile()}
               >
-                Sign Out
-              </Link>
-            ) : (
-              // eslint-disable-next-line
-              <Link
-                color="gray.500"
-                _active={{
-                  transform: 'scale(0.95)'
-                }}
-                onClick={() => handleSignIn()}
-              >
-                Sign In
-              </Link>
-            )}
-            <Button
-              variant="solid"
-              size="md"
-              fontSize={{ base: 'md', md: 'lg' }}
-              colorScheme="red"
-              borderRadius="25px"
-              height={[6, 7, 8, 10]}
-              _active={{
-                transform: 'scale(0.95)'
-              }}
-              onClick={() => handleNewProfile()}
-            >
-              New Profile
-            </Button>
-          </Stack>
+                New Profile
+              </Button>
+            </Stack>
+          ) : (
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+                size="md"
+                variant="outline"
+              />
+              <MenuList>
+                <MenuItem>
+                  <Link color="gray.500" href="https://aggregator.murmurations.network">
+                    Map
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  {user ? (
+                    <NextLink href="/dashboard">
+                      <Link
+                        color="gray.500"
+                        _active={{
+                          transform: 'scale(0.95)'
+                        }}
+                      >
+                        Dashboard
+                      </Link>
+                    </NextLink>
+                  ) : (
+                    <NextLink href="/protools">
+                      <Link
+                        color="gray.500"
+                        _active={{
+                          transform: 'scale(0.95)'
+                        }}
+                      >
+                        Pro Tools
+                      </Link>
+                    </NextLink>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {user ? (
+                    // eslint-disable-next-line
+                    <Link
+                      color="gray.500"
+                      _active={{
+                        transform: 'scale(0.95)'
+                      }}
+                      onClick={() => signout()}
+                    >
+                      Sign Out
+                    </Link>
+                  ) : (
+                    // eslint-disable-next-line
+                    <Link
+                      color="gray.500"
+                      _active={{
+                        transform: 'scale(0.95)'
+                      }}
+                      onClick={() => handleSignIn()}
+                    >
+                      Sign In
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {/* eslint-disable-next-line */}
+                  <Link
+                    color="gray.500"
+                    _active={{
+                      transform: 'scale(0.95)'
+                    }}
+                    onClick={() => handleNewProfile()}
+                  >
+                    New Profile
+                  </Link>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </Flex>
         {/* 
         N A V B A R  -  E n d
