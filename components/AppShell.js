@@ -37,6 +37,7 @@ export default function AppShell({ children }) {
   const screenSize = useBreakpointValue({
     lg: 'desktop'
   })
+
   function handleNewProfile() {
     resetProfile()
     Router.push('/profile')
