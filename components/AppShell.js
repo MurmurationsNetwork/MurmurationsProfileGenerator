@@ -94,7 +94,7 @@ export default function AppShell({ children }) {
           </Flex>
           {screenSize === 'desktop' ? (
             <Stack spacing={[8, 12, 16, 24]} isInline alignItems="center" mb={{ base: 2, md: 0 }}>
-              <Link color="gray.500" href="https://aggregator.murmurations.network">
+              <Link color="gray.500" href={process.env.NEXT_PUBLIC_MURMURATIONS_AGGREGATOR_URL}>
                 Map
               </Link>
               {user ? (
@@ -169,7 +169,7 @@ export default function AppShell({ children }) {
               />
               <MenuList>
                 <MenuItem>
-                  <Link color="gray.500" href="https://aggregator.murmurations.network">
+                  <Link color="gray.500" href={process.env.NEXT_PUBLIC_MURMURATIONS_AGGREGATOR_URL}>
                     Map
                   </Link>
                 </MenuItem>
