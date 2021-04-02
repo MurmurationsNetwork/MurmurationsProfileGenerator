@@ -35,23 +35,17 @@ const GlobalStyle = ({ children }) => {
   )
 }
 
-function SafeHydrate({ children }) {
-  return <div suppressHydrationWarning>{typeof window === 'undefined' ? null : children}</div>
-}
-
 function MpgApp({ Component, pageProps }) {
   return (
-    <SafeHydrate>
-      <ChakraProvider theme={customTheme}>
-        <AuthProvider>
-          <ProfileProvider>
-            <GlobalStyle>
-              <Component {...pageProps} />
-            </GlobalStyle>
-          </ProfileProvider>
-        </AuthProvider>
-      </ChakraProvider>
-    </SafeHydrate>
+    <ChakraProvider theme={customTheme}>
+      <AuthProvider>
+        <ProfileProvider>
+          <GlobalStyle>
+            <Component {...pageProps} />
+          </GlobalStyle>
+        </ProfileProvider>
+      </AuthProvider>
+    </ChakraProvider>
   )
 }
 
