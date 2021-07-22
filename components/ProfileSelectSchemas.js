@@ -1,6 +1,7 @@
 import { Button, Checkbox, Flex, Heading, Link, Stack, Text, useToast } from '@chakra-ui/react'
 import { pickBy } from 'lodash'
 import { useReducer, useState } from 'react'
+import semver from 'semver'
 import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
@@ -43,11 +44,12 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
 
   if (data) {
     // Remove the default schema which is only used by the index for initial validation
-    const initialList = data.data.filter(schema => schema.name !== 'default-v1')
+    const initialList = data.data.filter(schema => schema.name !== 'default-v1.0.0')
 
     const removeOldVersions = (acc, cv) => {
       const found = acc.find(({ title }) => title === cv.title)
-      if (found?.version < cv.version) acc = acc.filter(obj => obj.name !== found.name)
+      if (found && semver.lt(found?.version, cv.version))
+        acc = acc.filter(obj => obj.name !== found.name)
       acc.push(cv)
       return acc
     }

@@ -9,6 +9,7 @@ import {
   Button,
   Flex,
   HStack,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -208,7 +209,12 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                     Status:{' '}
                     <Text as="span" fontWeight={700} textTransform="capitalize" color="yellow.600">
                       {profile.status}
-                    </Text>
+                    </Text>{' '}
+                    (
+                    <Link color="gray.500" isExternal href={profile.url}>
+                      View Your Profile
+                    </Link>
+                    )
                   </Text>
                   <Text>Last Updated: {new Date(profile.updated).toISOString()}</Text>
                   <Text>
@@ -250,7 +256,12 @@ export default function DashboardProfiles({ profiles, setProfile }) {
                           color="yellow.600"
                         >
                           {profile.status}
-                        </Text>
+                        </Text>{' '}
+                        (
+                        <Link color="gray.500" isExternal href={profile.url}>
+                          View Your Profile
+                        </Link>
+                        )
                       </Text>
                       <Text>Last Updated: {new Date(profile.updated).toISOString()}</Text>
                       <Text>
