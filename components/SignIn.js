@@ -10,6 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Switch,
   Text,
   VStack
 } from '@chakra-ui/react'
@@ -20,6 +21,7 @@ import { useAuth } from '@/lib/auth'
 export default function SignIn({ isOpen, onClose }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [signup, setSignup] = useState(false)
   const handleEmailChange = event => setEmail(event.target.value)
   const handlePasswordChange = event => setPassword(event.target.value)
   const { signinWithGithub, signinWithGoogle, signinWithEmail, signupWithEmail } = useAuth()
@@ -42,6 +44,10 @@ export default function SignIn({ isOpen, onClose }) {
   function signupEmail(email, password) {
     signupWithEmail(email, password)
     onClose()
+  }
+
+  function handleToggle() {
+    setSignup(!signup)
   }
 
   return (
@@ -76,29 +82,44 @@ export default function SignIn({ isOpen, onClose }) {
                 Sign in with Google
               </Button>
             </HStack>
+            <HStack spacing={4}>
+              <Text>Or Sign in/Sign up with Email</Text>
+            </HStack>
           </VStack>
-          <Text>Signup</Text>
-          <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-          <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
-          <Button
-            colorScheme="yellow"
-            color="white"
-            borderRadius="2xl"
-            onClick={() => signupEmail(email, password)}
-          >
-            Sign up with Email
-          </Button>
-          <Text>Signin</Text>
-          <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-          <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
-          <Button
-            colorScheme="yellow"
-            color="white"
-            borderRadius="2xl"
-            onClick={() => signinEmail(email, password)}
-          >
-            Sign in with Email
-          </Button>
+          <VStack spacing={4} margin={4}>
+            <HStack spacing={4} isInline justifyContent="flex-start" alignItems="flex-start">
+              <Text fontWeight="600">Sign In</Text>
+              <Switch size="lg" colorScheme="yellow" onChange={handleToggle} />
+              <Text fontWeight="600">Sign up</Text>
+            </HStack>
+            {signup ? (
+              <>
+                <Input value={email} onChange={handleEmailChange} placeholder="Email" />
+                <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+                <Button
+                  colorScheme="yellow"
+                  color="white"
+                  borderRadius="2xl"
+                  onClick={() => signupEmail(email, password)}
+                >
+                  Sign up with Email
+                </Button>
+              </>
+            ) : (
+              <>
+                <Input value={email} onChange={handleEmailChange} placeholder="Email" />
+                <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+                <Button
+                  colorScheme="yellow"
+                  color="white"
+                  borderRadius="2xl"
+                  onClick={() => signinEmail(email, password)}
+                >
+                  Sign in with Email
+                </Button>
+              </>
+            )}
+          </VStack>
         </ModalBody>
         <ModalFooter></ModalFooter>
       </ModalContent>
