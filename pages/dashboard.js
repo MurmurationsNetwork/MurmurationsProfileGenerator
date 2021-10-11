@@ -1,24 +1,9 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-  VStack
-} from '@chakra-ui/react'
+import { Button, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import useSWR from 'swr'
 
 import AppShell from '@/components/AppShell'
 import DashboardProfiles from '@/components/DashboardProfiles'
+import SignIn from '@/components/SignIn'
 import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 import fetcher from '@/utils/fb-fetcher'
@@ -115,54 +100,12 @@ export default function Dashboard() {
           </Button>
         </Flex>
       )}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Text>Sign in to manage your profiles</Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody my={8}>
-            <VStack spacing={8}>
-              <HStack spacing={8}>
-                <Image height={8} src="github-yellow.svg" alt="GitHub" />
-                <Button
-                  colorScheme="yellow"
-                  color="white"
-                  borderRadius="2xl"
-                  onClick={() => signinGithub()}
-                >
-                  Sign in with GitHub
-                </Button>
-              </HStack>
-              <HStack spacing={8}>
-                <Image height={8} src="google-yellow.svg" alt="Google" />
-                <Button
-                  colorScheme="yellow"
-                  color="white"
-                  borderRadius="2xl"
-                  onClick={() => signinGoogle()}
-                >
-                  Sign in with Google
-                </Button>
-              </HStack>
-              {/* TODO: Add Twitter Login */}
-              {/* <HStack spacing={8}>
-                  <Image height={8} src="twitter-yellow.svg" alt="Twitter" />
-                  <Button
-                    colorScheme="yellow"
-                    color="white"
-                    borderRadius="2xl"
-                    onClick={() => signinWithTwitter()}
-                  >
-                    Sign in with Twitter
-                  </Button>
-                </HStack> */}
-            </VStack>
-          </ModalBody>
-          <ModalFooter></ModalFooter>
-        </ModalContent>
-      </Modal>
+      <SignIn
+        isOpen={isOpen}
+        onClose={onClose}
+        signinGithub={signinGithub}
+        signinGoogle={signinGoogle}
+      />
     </AppShell>
   )
 }

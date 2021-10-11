@@ -2,7 +2,6 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import {
   Button,
   Flex,
-  HStack,
   IconButton,
   Image,
   Link,
@@ -10,21 +9,13 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
-  Text,
-  useDisclosure,
-  VStack
+  useDisclosure
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import Router from 'next/router'
 
+import SignIn from '@/components/SignIn'
 import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
@@ -213,61 +204,12 @@ export default function Navbar({ screenSize }) {
           </MenuList>
         </Menu>
       )}
-
-      {/*
-        S I G N  I N  M O D A L  -  S t a r t
-        */}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Text>Sign in to manage your profiles</Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody my={8}>
-            <VStack spacing={8}>
-              <HStack spacing={8}>
-                <Image height={8} src="github-yellow.svg" alt="GitHub" />
-                <Button
-                  colorScheme="yellow"
-                  color="white"
-                  borderRadius="2xl"
-                  onClick={() => signinGithub()}
-                >
-                  Sign in with GitHub
-                </Button>
-              </HStack>
-              <HStack spacing={8}>
-                <Image height={8} src="google-yellow.svg" alt="Google" />
-                <Button
-                  colorScheme="yellow"
-                  color="white"
-                  borderRadius="2xl"
-                  onClick={() => signinGoogle()}
-                >
-                  Sign in with Google
-                </Button>
-              </HStack>
-              {/* TODO: Add Twitter Login */}
-              {/* <HStack spacing={8}>
-                  <Image height={8} src="twitter-yellow.svg" alt="Twitter" />
-                  <Button
-                    colorScheme="yellow"
-                    color="white"
-                    borderRadius="2xl"
-                    onClick={() => signinWithTwitter()}
-                  >
-                    Sign in with Twitter
-                  </Button>
-                </HStack> */}
-            </VStack>
-          </ModalBody>
-          <ModalFooter></ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/*
-        S I G N  I N  M O D A L  -  E n d
-        */}
+      <SignIn
+        isOpen={isOpen}
+        onClose={onClose}
+        signinGithub={signinGithub}
+        signinGoogle={signinGoogle}
+      />
     </Flex>
   )
 }
