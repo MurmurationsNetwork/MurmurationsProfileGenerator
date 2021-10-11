@@ -2,6 +2,7 @@ import {
   Button,
   HStack,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,8 +13,37 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react'
+import { useState } from 'react'
 
-export default function SignIn({ isOpen, onClose, signinGithub, signinGoogle }) {
+import { useAuth } from '@/lib/auth'
+
+export default function SignIn({ isOpen, onClose }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const handleEmailChange = event => setEmail(event.target.value)
+  const handlePasswordChange = event => setPassword(event.target.value)
+  const { signinWithGithub, signinWithGoogle, signinWithEmail, signupWithEmail } = useAuth()
+
+  function signinGithub() {
+    signinWithGithub()
+    onClose()
+  }
+
+  function signinGoogle() {
+    signinWithGoogle()
+    onClose()
+  }
+
+  function signinEmail(email, password) {
+    signinWithEmail(email, password)
+    onClose()
+  }
+
+  function signupEmail(email, password) {
+    signupWithEmail(email, password)
+    onClose()
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -47,6 +77,28 @@ export default function SignIn({ isOpen, onClose, signinGithub, signinGoogle }) 
               </Button>
             </HStack>
           </VStack>
+          <Text>Signup</Text>
+          <Input value={email} onChange={handleEmailChange} placeholder="Email" />
+          <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+          <Button
+            colorScheme="yellow"
+            color="white"
+            borderRadius="2xl"
+            onClick={() => signupEmail(email, password)}
+          >
+            Sign up with Email
+          </Button>
+          <Text>Signin</Text>
+          <Input value={email} onChange={handleEmailChange} placeholder="Email" />
+          <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+          <Button
+            colorScheme="yellow"
+            color="white"
+            borderRadius="2xl"
+            onClick={() => signinEmail(email, password)}
+          >
+            Sign in with Email
+          </Button>
         </ModalBody>
         <ModalFooter></ModalFooter>
       </ModalContent>

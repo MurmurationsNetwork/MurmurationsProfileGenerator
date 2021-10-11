@@ -9,7 +9,7 @@ import { useProfile } from '@/lib/profile'
 import fetcher from '@/utils/fb-fetcher'
 
 export default function Dashboard() {
-  const { signinWithGithub, signinWithGoogle, user } = useAuth()
+  const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { setProfile } = useProfile()
   const { data, error } = useSWR(user ? ['/api/profiles', user.token] : null, fetcher, {
@@ -20,16 +20,6 @@ export default function Dashboard() {
 
   function handleSignIn() {
     onOpen()
-  }
-
-  function signinGithub() {
-    signinWithGithub()
-    onClose()
-  }
-
-  function signinGoogle() {
-    signinWithGoogle()
-    onClose()
   }
 
   return (
@@ -100,12 +90,7 @@ export default function Dashboard() {
           </Button>
         </Flex>
       )}
-      <SignIn
-        isOpen={isOpen}
-        onClose={onClose}
-        signinGithub={signinGithub}
-        signinGoogle={signinGoogle}
-      />
+      <SignIn isOpen={isOpen} onClose={onClose} />
     </AppShell>
   )
 }

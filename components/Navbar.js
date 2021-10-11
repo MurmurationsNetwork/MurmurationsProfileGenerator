@@ -20,7 +20,7 @@ import { useAuth } from '@/lib/auth'
 import { useProfile } from '@/lib/profile'
 
 export default function Navbar({ screenSize }) {
-  const { signinWithGithub, signinWithGoogle, signout, user } = useAuth()
+  const { signout, user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { resetProfile } = useProfile()
 
@@ -31,16 +31,6 @@ export default function Navbar({ screenSize }) {
 
   function handleSignIn() {
     onOpen()
-  }
-
-  function signinGithub() {
-    signinWithGithub()
-    onClose()
-  }
-
-  function signinGoogle() {
-    signinWithGoogle()
-    onClose()
   }
 
   return (
@@ -204,12 +194,7 @@ export default function Navbar({ screenSize }) {
           </MenuList>
         </Menu>
       )}
-      <SignIn
-        isOpen={isOpen}
-        onClose={onClose}
-        signinGithub={signinGithub}
-        signinGoogle={signinGoogle}
-      />
+      <SignIn isOpen={isOpen} onClose={onClose} />
     </Flex>
   )
 }

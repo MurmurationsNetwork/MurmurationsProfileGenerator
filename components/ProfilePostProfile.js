@@ -29,7 +29,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
   const [hosted, setHosted] = useState(false)
   const { hasCopied, onCopy } = useClipboard(JSON.stringify(profile.json, null, 2))
   const toast = useToast()
-  const { signinWithGithub, signinWithGoogle, user } = useAuth()
+  const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   let profileJson = profile.json
@@ -70,16 +70,6 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
 
   function handleSignIn() {
     onOpen()
-  }
-
-  function signinGithub() {
-    signinWithGithub()
-    onClose()
-  }
-
-  function signinGoogle() {
-    signinWithGoogle()
-    onClose()
   }
 
   function handleToggle() {
@@ -330,12 +320,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
             </Button>
           </Flex>
         </Flex>
-        <SignIn
-          isOpen={isOpen}
-          onClose={onClose}
-          signinGithub={signinGithub}
-          signinGoogle={signinGoogle}
-        />
+        <SignIn isOpen={isOpen} onClose={onClose} />
       </Flex>
     </Flex>
   )
