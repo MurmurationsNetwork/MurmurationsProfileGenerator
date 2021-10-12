@@ -22,6 +22,7 @@ export default function SignIn({ isOpen, onClose }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [signup, setSignup] = useState(false)
+  const [errorCode, setErrorCode] = useState('')
   const handleEmailChange = event => setEmail(event.target.value)
   const handlePasswordChange = event => setPassword(event.target.value)
   const { signinWithGithub, signinWithGoogle, signinWithEmail, signupWithEmail } = useAuth()
@@ -36,14 +37,26 @@ export default function SignIn({ isOpen, onClose }) {
     onClose()
   }
 
-  function signinEmail(email, password) {
-    signinWithEmail(email, password)
-    onClose()
+  async function signinEmail(email, password) {
+    const error = await signinWithEmail(email, password)
+    if (error.code) {
+      setErrorCode(error.code)
+      console.error('There was an error: ', error.code)
+    } else {
+      setErrorCode('')
+      onClose()
+    }
   }
 
-  function signupEmail(email, password) {
-    signupWithEmail(email, password)
-    onClose()
+  async function signupEmail(email, password) {
+    const error = await signupWithEmail(email, password)
+    if (error.code) {
+      setErrorCode(error.code)
+      console.error('There was an error: ', error.code)
+    } else {
+      setErrorCode('')
+      onClose()
+    }
   }
 
   function handleToggle() {
@@ -119,6 +132,9 @@ export default function SignIn({ isOpen, onClose }) {
                 </Button>
               </>
             )}
+          </VStack>
+          <VStack spacing={4} margin={4}>
+            {errorCode ? <Text>There was an error: {errorCode}</Text> : null}
           </VStack>
         </ModalBody>
         <ModalFooter></ModalFooter>
