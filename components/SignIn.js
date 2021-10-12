@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Switch,
   Text,
+  useToast,
   VStack
 } from '@chakra-ui/react'
 import { useState } from 'react'
@@ -22,10 +23,10 @@ export default function SignIn({ isOpen, onClose }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [signup, setSignup] = useState(false)
-  const [errorCode, setErrorCode] = useState('')
   const handleEmailChange = event => setEmail(event.target.value)
   const handlePasswordChange = event => setPassword(event.target.value)
   const { signinWithGithub, signinWithGoogle, signinWithEmail, signupWithEmail } = useAuth()
+  const toast = useToast()
 
   function signinGithub() {
     signinWithGithub()
@@ -40,10 +41,38 @@ export default function SignIn({ isOpen, onClose }) {
   async function signinEmail(email, password) {
     const error = await signinWithEmail(email, password)
     if (error.code) {
-      setErrorCode(error.code)
-      console.error('There was an error: ', error.code)
+      if (error.code == 'auth/wrong-password') {
+        toast({
+          title: 'Wrong Password',
+          description: 'The password you have entered is invalid.',
+          status: 'error',
+          position: 'top',
+          duration: 5000,
+          isClosable: true
+        })
+      } else if (error.code == 'auth/user-not-found') {
+        toast({
+          title: 'User Not Found',
+          description:
+            'There is no user record corresponding to this email address. The user may have been deleted.',
+          status: 'error',
+          position: 'top',
+          duration: 5000,
+          isClosable: true
+        })
+      } else {
+        toast({
+          title: 'Sign In Error',
+          description: error.code,
+          status: 'error',
+          position: 'top',
+          duration: 5000,
+          isClosable: true
+        })
+      }
     } else {
-      setErrorCode('')
+      setEmail('')
+      setPassword('')
       onClose()
     }
   }
@@ -51,10 +80,28 @@ export default function SignIn({ isOpen, onClose }) {
   async function signupEmail(email, password) {
     const error = await signupWithEmail(email, password)
     if (error.code) {
-      setErrorCode(error.code)
-      console.error('There was an error: ', error.code)
+      if (error.code == 'auth/email-already-in-use') {
+        toast({
+          title: 'Already In Use',
+          description: 'The email address is already in use by another account.',
+          status: 'error',
+          position: 'top',
+          duration: 5000,
+          isClosable: true
+        })
+      } else {
+        toast({
+          title: 'Sign Up Error',
+          description: error.code,
+          status: 'error',
+          position: 'top',
+          duration: 5000,
+          isClosable: true
+        })
+      }
     } else {
-      setErrorCode('')
+      setEmail('')
+      setPassword('')
       onClose()
     }
   }
@@ -108,7 +155,12 @@ export default function SignIn({ isOpen, onClose }) {
             {signup ? (
               <>
                 <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-                <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+                <Input
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Password"
+                  type="password"
+                />
                 <Button
                   colorScheme="yellow"
                   color="white"
@@ -121,7 +173,12 @@ export default function SignIn({ isOpen, onClose }) {
             ) : (
               <>
                 <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-                <Input value={password} onChange={handlePasswordChange} placeholder="Password" />
+                <Input
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Password"
+                  type="password"
+                />
                 <Button
                   colorScheme="yellow"
                   color="white"
@@ -132,9 +189,6 @@ export default function SignIn({ isOpen, onClose }) {
                 </Button>
               </>
             )}
-          </VStack>
-          <VStack spacing={4} margin={4}>
-            {errorCode ? <Text>There was an error: {errorCode}</Text> : null}
           </VStack>
         </ModalBody>
         <ModalFooter></ModalFooter>
