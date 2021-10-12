@@ -3,6 +3,8 @@ import {
   HStack,
   Image,
   Input,
+  InputGroup,
+  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -27,6 +29,11 @@ export default function SignIn({ isOpen, onClose }) {
   const handlePasswordChange = event => setPassword(event.target.value)
   const { signinWithGithub, signinWithGoogle, signinWithEmail, signupWithEmail } = useAuth()
   const toast = useToast()
+  const [show, setShow] = useState(false)
+
+  function handleMask() {
+    setShow(!show)
+  }
 
   function signinGithub() {
     signinWithGithub()
@@ -155,12 +162,19 @@ export default function SignIn({ isOpen, onClose }) {
             {signup ? (
               <>
                 <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-                <Input
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Password"
-                  type="password"
-                />
+                <InputGroup>
+                  <Input
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Password"
+                    type={show ? 'text' : 'password'}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleMask}>
+                      {show ? 'Hide' : 'Show'}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <Button
                   colorScheme="yellow"
                   color="white"
@@ -173,12 +187,19 @@ export default function SignIn({ isOpen, onClose }) {
             ) : (
               <>
                 <Input value={email} onChange={handleEmailChange} placeholder="Email" />
-                <Input
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="Password"
-                  type="password"
-                />
+                <InputGroup>
+                  <Input
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Password"
+                    type={show ? 'text' : 'password'}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleMask}>
+                      {show ? 'Hide' : 'Show'}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <Button
                   colorScheme="yellow"
                   color="white"
