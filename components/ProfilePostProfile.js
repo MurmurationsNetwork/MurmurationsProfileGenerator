@@ -4,30 +4,21 @@ import {
   Code,
   Flex,
   Heading,
-  HStack,
-  Image,
   Input,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Switch,
   Text,
   useClipboard,
   useDisclosure,
-  useToast,
-  VStack
+  useToast
 } from '@chakra-ui/react'
 import cuid from 'cuid'
 import { sha256 } from 'js-sha256'
 import Router from 'next/router'
 import { useEffect, useState } from 'react'
 
+import SignIn from '@/components/SignIn'
 import { postNode } from '@/lib/api'
 import { useAuth } from '@/lib/auth'
 import { createProfile } from '@/lib/db'
@@ -38,7 +29,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
   const [hosted, setHosted] = useState(false)
   const { hasCopied, onCopy } = useClipboard(JSON.stringify(profile.json, null, 2))
   const toast = useToast()
-  const { signinWithGithub, signinWithGoogle, user } = useAuth()
+  const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   let profileJson = profile.json
@@ -79,16 +70,6 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
 
   function handleSignIn() {
     onOpen()
-  }
-
-  function signinGithub() {
-    signinWithGithub()
-    onClose()
-  }
-
-  function signinGoogle() {
-    signinWithGoogle()
-    onClose()
   }
 
   function handleToggle() {
@@ -339,60 +320,7 @@ export default function ProfilePostProfile({ profile, resetProfile, setProfile }
             </Button>
           </Flex>
         </Flex>
-        {/*
-        S I G N  I N  M O D A L  -  S t a r t
-        */}
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              <Text>Sign in to manage your profiles</Text>
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody my={8}>
-              <VStack spacing={8}>
-                <HStack spacing={8}>
-                  <Image height={8} src="github-yellow.svg" alt="GitHub" />
-                  <Button
-                    colorScheme="yellow"
-                    color="white"
-                    borderRadius="2xl"
-                    onClick={() => signinGithub()}
-                  >
-                    Sign in with GitHub
-                  </Button>
-                </HStack>
-                <HStack spacing={8}>
-                  <Image height={8} src="google-yellow.svg" alt="Google" />
-                  <Button
-                    colorScheme="yellow"
-                    color="white"
-                    borderRadius="2xl"
-                    onClick={() => signinGoogle()}
-                  >
-                    Sign in with Google
-                  </Button>
-                </HStack>
-                {/* TODO: Add Twitter Login */}
-                {/* <HStack spacing={8}>
-                  <Image height={8} src="twitter-yellow.svg" alt="Twitter" />
-                  <Button
-                    colorScheme="yellow"
-                    color="white"
-                    borderRadius="2xl"
-                    onClick={() => signinWithTwitter()}
-                  >
-                    Sign in with Twitter
-                  </Button>
-                </HStack> */}
-              </VStack>
-            </ModalBody>
-            <ModalFooter></ModalFooter>
-          </ModalContent>
-        </Modal>
-        {/*
-        S I G N  I N  M O D A L  -  E n d
-        */}
+        <SignIn isOpen={isOpen} onClose={onClose} />
       </Flex>
     </Flex>
   )
