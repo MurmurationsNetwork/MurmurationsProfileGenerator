@@ -78,6 +78,14 @@ export default function SignIn({ isOpen, onClose }) {
         })
       }
     } else {
+      toast({
+        title: 'Sign In Completed',
+        description: 'You are now signed in.',
+        status: 'success',
+        position: 'top',
+        duration: 5000,
+        isClosable: true
+      })
       setEmail('')
       setPassword('')
       onClose()
@@ -107,6 +115,14 @@ export default function SignIn({ isOpen, onClose }) {
         })
       }
     } else {
+      toast({
+        title: 'Sign Up Completed',
+        description: 'You are now signed in.',
+        status: 'success',
+        position: 'top',
+        duration: 5000,
+        isClosable: true
+      })
       setEmail('')
       setPassword('')
       onClose()
