@@ -43,7 +43,7 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
 
   if (data) {
     // Remove the default schema which is only used by the index for initial validation
-    const initialList = data.data.filter(schema => schema.name !== 'default-v1')
+    const initialList = data.data.filter(schema => !schema.name.includes('default-v'))
 
     const removeOldVersions = (acc, cv) => {
       const found = acc.find(({ title }) => title === cv.title)
