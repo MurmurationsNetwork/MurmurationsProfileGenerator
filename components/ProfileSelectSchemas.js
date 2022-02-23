@@ -1,6 +1,7 @@
 import { Button, Checkbox, Flex, Heading, Link, Stack, Text, useToast } from '@chakra-ui/react'
 import { pickBy } from 'lodash'
 import { useReducer, useState } from 'react'
+import semver from 'semver'
 import useSWR from 'swr'
 
 import fetcher from '@/utils/fetcher'
@@ -19,7 +20,7 @@ function ListSchemas({ dispatch, schemaList, state }) {
           <Link href={schema.url} isExternal textDecoration="underline">
             {schema.title}
           </Link>{' '}
-          (v{schema.version})
+          (v{schema.name.slice(schema.name.lastIndexOf('-v') + 2)})
         </Heading>
         <Text>{schema.description}</Text>
       </Flex>
@@ -44,10 +45,16 @@ export default function ProfileSelectSchemas({ profile, setProfile }) {
   if (data) {
     // Remove the default schema which is only used by the index for initial validation
     const initialList = data.data.filter(schema => !schema.name.includes('default-v'))
-
     const removeOldVersions = (acc, cv) => {
       const found = acc.find(({ title }) => title === cv.title)
-      if (found?.version < cv.version) acc = acc.filter(obj => obj.name !== found.name)
+      let currentVer = cv.name.slice(cv.name.lastIndexOf('-v') + 2)
+      let foundVer = found?.name.slice(found.name.lastIndexOf('-v') + 2)
+      if (foundVer != undefined && currentVer != undefined) {
+        if (
+          semver.lt(semver.valid(semver.coerce(foundVer)), semver.valid(semver.coerce(currentVer)))
+        )
+          acc = acc.filter(obj => obj.name !== found.name)
+      }
       acc.push(cv)
       return acc
     }
