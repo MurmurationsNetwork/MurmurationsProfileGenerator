@@ -1,38 +1,6 @@
 # Murmurations Profile Generator v1
 
-## Firebase Cloud Firestore Security Rules
+Development of this app has ceased.
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{uid} {
-      allow read, write: if isUser(uid);
-    }
-    match /profiles/{document} {
-      allow read: if isOwner();
-      allow delete: if isOwner();
-      allow update: if isOwner() && willBeOwner();
-      allow create: if true;
-    }
-  }
-}
-function isUser(uid) {
-  return isSignedIn() && request.auth.uid == uid;
-}
-function isSignedIn() {
-  return request.auth.uid != null;
-}
-function isOwner(){
-  return isUser(currentData().user);
-}
-function willBeOwner(){
-  return isUser(incomingData().user);
-}
-function currentData() {
-  return resource.data;
-}
-function incomingData() {
-  return request.resource.data;
-}
-```
+Please see the new [MurmurationsProfileGeneratorV2
+ repo](https://github.com/MurmurationsNetwork/MurmurationsProfileGeneratorV2).
